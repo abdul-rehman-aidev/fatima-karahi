@@ -1,0 +1,363 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Fatima Karahi — design tokens (2026 brand refresh)
+   This file, NOT design/, is the source of truth for the website's current
+   look — the client's new premium-fine-dining identity. design/ is a
+   separate, earlier reference kit and is intentionally left untouched.
+
+   Base colours are exactly the six the client specified, applied per their
+   documented roles. Everything else here (the -deep/-bright/-line variants,
+   --cream, --sage, --stone) is a DERIVED shade needed to keep two-zone
+   dark/light contrast and AA text contrast working — none of it introduces
+   a seventh hue; each is a tint/shade of one of the six. See README for the
+   exact derivation and the contrast numbers.
+   ========================================================================== */
+
+:root {
+  /* ---- Base palette (client brand colours, verbatim) ---- */
+  --emerald:        #173f3a; /* 1. Primary brand colour — nav, footer, primary CTAs, dividers. */
+  --saffron:        #e2ad57; /* 2. Gold accent — hover states, underlines, price numerals. Highlight only, never a large fill. */
+  --brown:          #8B5E3C; /* 3. Warm brown — card borders, secondary/outline buttons, icon strokes. */
+  --sage-tag:       #67765B; /* 4. Sage — badges/tags, subtle tag backgrounds, alternate icon colour. */
+  --ivory:          #F2EBDD; /* 5. Cream — the default page background everywhere. */
+  --ink:            #2A2A2A; /* 6. Near-black — all body text. Never pure #000. */
+
+  /* ---- Derived shades (tints/shades of the six above; see README) ---- */
+  --emerald-deep:   #112D2A; /* Emerald, darkened ~28% — footers, vignettes, deep bands. */
+  --emerald-line:   #41625D; /* Emerald, lightened ~18% — hairlines on dark. */
+  --saffron-bright: #E8BF7C; /* Saffron, lightened ~22% — hover shimmer, focus sparks. */
+  --saffron-deep:   #7E6131; /* Saffron, darkened to clear 4.5:1 on both --ivory and --cream — for gold TEXT on light zones (raw saffron on cream is 1.7:1, fails AA). */
+  --cream:          #EAE3D5; /* Ivory, ~3% darker — the "stacked section" neutral for card surfaces, never a hard colour change. */
+
+  --stone:          #676456; /* Muted/secondary text on light zones — darkened from the prior #6E6A5B: that value cleared 4.5:1 on the old, lighter ivory but only hit 4.24:1 on the new, darker --cream (caught by a live Lighthouse audit on the catering page). This clears both with margin (4.65:1 on cream, 5.0:1 on ivory). */
+  --sage:           #9DB0A2; /* Muted/secondary text on DARK zones — distinct from --sage-tag (the badge accent); kept so existing dark-zone copy stays legible (5:1+ on emerald). */
+
+  /* ---- Semantic aliases ---- */
+  --surface-dark:        var(--emerald);
+  --surface-dark-deep:   var(--emerald-deep);
+  --surface-light:       var(--ivory);
+  --surface-card:        var(--cream);
+
+  --text-on-dark:        var(--ivory);
+  --text-on-dark-muted:  var(--sage);
+  --text-on-light:       var(--ink);
+  --text-on-light-muted: var(--stone);
+
+  --action:              var(--emerald);
+  --action-hover:        var(--saffron);
+  --focus-ring:          var(--saffron);
+
+  --line-on-dark:        var(--emerald-line);
+  --line-gold:           color-mix(in srgb, var(--saffron) 55%, transparent);
+
+  --scrim-dark: linear-gradient(180deg,
+                  color-mix(in srgb, var(--emerald-deep) 10%, transparent) 0%,
+                  color-mix(in srgb, var(--emerald-deep) 78%, transparent) 100%);
+
+  /* ---- Typography (families injected by next/font in src/app/fonts.ts) ----
+     Marcellus   — H1/H2 and other major display moments (regular weight only).
+     Cormorant Garamond — H3/H4, pull-quotes, testimonials, editorial intros (italic for quotes).
+     Open Sans   — all body copy, nav, buttons, forms, footer.
+     Allura      — one reserved decorative flourish (see Logotype), never body text.
+     Gulzar      — Urdu Nastaliq, unrelated to this refresh; unchanged. */
+  --font-display:  var(--font-marcellus), Georgia, "Times New Roman", serif;
+  --font-editorial: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-body:     var(--font-open-sans), system-ui, -apple-system, sans-serif;
+  --font-script:   var(--font-allura), "Brush Script MT", cursive;
+  --font-urdu:     var(--font-gulzar), "Noto Nastaliq Urdu", serif;
+
+  --w-regular: 400;
+  --w-medium:  500;
+  --w-semibold: 600;
+
+  --t-display-xl: clamp(2.125rem, 3vw + 1.5rem, 4.5rem);   /* H1: 34px mobile -> 72px desktop, per brand spec */
+  --t-display-l:  clamp(1.625rem, 1vw + 1.5rem, 2.75rem);  /* H2: 26px mobile -> 44px desktop, per brand spec */
+  --t-display-m:  clamp(1.625rem, 1.4vw + 1.2rem, 1.875rem);
+  --t-editorial:  clamp(1.375rem, 0.6vw + 1.2rem, 1.625rem); /* H3/H4, 22-26px */
+  --t-body-l:     1.25rem;
+  --t-body:       clamp(0.9375rem, 0.4vw + 0.85rem, 1.0625rem); /* 15px mobile -> 17px desktop */
+  --t-eyebrow:    0.8125rem;
+
+  --lh-display: 1.08;
+  --lh-title:   1.15;
+  --lh-lead:    1.6;
+  --lh-body:    1.7;
+
+  --tr-display: 0em; /* Marcellus stays at normal letter-spacing, per brand spec */
+  --tr-eyebrow: 0.05em; /* nav/eyebrow tracking, 0.5-1px band at these sizes */
+
+  /* ---- Spacing, radii, layout ---- */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+
+  /* 96-140px desktop, 48-64px mobile, per brand spec — this clamp already
+     lands inside both bands (80px floor sits above the 64px mobile ceiling,
+     intentionally: "increase padding overall" reads as a floor, not a cap). */
+  --section-y: clamp(5rem, 10vw, 8.75rem);
+  --content-max: 1240px;
+  --measure: 68ch;
+
+  --r-card:   14px;
+  --r-button: 10px;
+  --r-pill:   999px;
+  --r-input:  10px;
+
+  --stroke-hair: 0.5px;
+
+  /* ---- Shadows, motion, texture ---- */
+  /* Subtle and warm — retinted to the new emerald-deep (17,45,42), same soft
+     low-opacity profile as before so this reads premium, not heavy. */
+  --shadow-card: 0 1px 2px rgba(17,45,42,.10), 0 12px 32px rgba(17,45,42,.14);
+  --shadow-lift: 0 2px 4px rgba(17,45,42,.12), 0 24px 56px rgba(17,45,42,.18);
+  --glow-gold:   0 0 0 1px color-mix(in srgb, var(--saffron) 50%, transparent),
+                 0 8px 24px color-mix(in srgb, var(--saffron) 24%, transparent);
+
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast:  180ms;
+  --dur:       320ms;
+  --dur-slow:  560ms;
+
+  /* Hero crossfade carousel — tune here */
+  --hero-transition-duration: 1.8s;
+  --hero-display-duration:    5.5s;
+  --hero-vignette-opacity:    0.6;
+
+  --press-scale: 0.98;
+  --hover-scale: 1.02;
+
+  --jali-opacity: 0.05;
+  --jali:
+    repeating-linear-gradient(45deg,  color-mix(in srgb, var(--saffron) 100%, transparent) 0 .5px, transparent .5px 22px),
+    repeating-linear-gradient(-45deg, color-mix(in srgb, var(--saffron) 100%, transparent) 0 .5px, transparent .5px 22px);
+
+  /* Spice-dot indicator + form error state — the brand spec lists exactly six
+     colours and says not to introduce a seventh. The prior system used an
+     invented red for these; both now derive from --brown, the warmest of the
+     six, so nothing outside the approved palette appears anywhere. */
+  --spice:      var(--brown);
+  --spice-soft: color-mix(in srgb, var(--brown) 55%, var(--saffron-bright) 45%);
+}
+
+/* ==========================================================================
+   Tailwind theme — tokens are the ONLY palette. Nothing here introduces a
+   value; every entry references a token custom property above.
+   ========================================================================== */
+
+@theme inline {
+  /* Colours */
+  --color-*: initial;
+  --color-emerald:      var(--emerald);
+  --color-emerald-deep: var(--emerald-deep);
+  --color-emerald-line: var(--emerald-line);
+  --color-gold:         var(--saffron);
+  --color-gold-bright:  var(--saffron-bright);
+  --color-gold-deep:    var(--saffron-deep);
+  --color-brown:        var(--brown);
+  --color-sage-tag:     var(--sage-tag);
+  --color-ivory:        var(--ivory);
+  --color-cream:        var(--cream);
+  --color-ink:          var(--ink);
+  --color-sage:         var(--sage);
+  --color-stone:        var(--stone);
+  --color-spice:        var(--spice);
+  --color-spice-soft:   var(--spice-soft);
+
+  /* Type */
+  --font-*: initial;
+  --font-display:   var(--font-display);
+  --font-editorial: var(--font-editorial);
+  --font-body:      var(--font-body);
+  --font-script:    var(--font-script);
+  --font-urdu:      var(--font-urdu);
+
+  --text-display-xl: var(--t-display-xl);
+  --text-display-xl--line-height: var(--lh-display);
+  --text-display-xl--letter-spacing: var(--tr-display);
+  --text-display-l: var(--t-display-l);
+  --text-display-l--line-height: var(--lh-title);
+  --text-display-l--letter-spacing: var(--tr-display);
+  --text-display-m: var(--t-display-m);
+  --text-display-m--line-height: var(--lh-title);
+  --text-editorial: var(--t-editorial);
+  --text-editorial--line-height: var(--lh-lead);
+  --text-body-l: var(--t-body-l);
+  --text-body-l--line-height: var(--lh-lead);
+  --text-body: var(--t-body);
+  --text-body--line-height: var(--lh-body);
+  --text-eyebrow: var(--t-eyebrow);
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: var(--tr-eyebrow);
+
+  /* Spacing / layout */
+  --spacing-s1:  var(--s-1);
+  --spacing-s2:  var(--s-2);
+  --spacing-s3:  var(--s-3);
+  --spacing-s4:  var(--s-4);
+  --spacing-s5:  var(--s-5);
+  --spacing-s6:  var(--s-6);
+  --spacing-s7:  var(--s-7);
+  --spacing-s8:  var(--s-8);
+  --spacing-s9:  var(--s-9);
+  --spacing-s10: var(--s-10);
+  --spacing-section: var(--section-y);
+  --container-content: var(--content-max);
+
+  /* Radii */
+  --radius-*: initial;
+  --radius-card:   var(--r-card);
+  --radius-button: var(--r-button);
+  --radius-pill:   var(--r-pill);
+  --radius-input:  var(--r-input);
+
+  /* Shadows */
+  --shadow-*: initial;
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-glow-gold: var(--glow-gold);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Cream is the default page background everywhere now — emerald zones set
+     their own background per-section (hero, footer, story band, etc). */
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--saffron);
+  color: var(--ink);
+}
+
+/* Brand focus — gold hairline, never the browser default */
+:focus-visible {
+  outline: 1.5px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Urdu spans — Gulzar needs generous leading; never body text */
+[lang="ur"] {
+  font-family: var(--font-urdu);
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   Motion system
+   ========================================================================== */
+
+/* Hero orchestration — one signature entrance per load, <=900ms total */
+@keyframes fk-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hero-seq [data-seq] {
+  animation: fk-rise 420ms var(--ease-out) both;
+}
+.hero-seq [data-seq="1"] { animation-delay: 40ms; }
+.hero-seq [data-seq="2"] { animation-delay: 130ms; }
+.hero-seq [data-seq="3"] { animation-delay: 220ms; }
+.hero-seq [data-seq="4"] { animation-delay: 310ms; }
+.hero-seq [data-seq="5"] { animation-delay: 400ms; }
+.hero-seq [data-seq="6"] { animation-delay: 470ms; }
+
+/* Scroll reveals — sections fade + rise 16px; children stagger via --reveal-delay */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero carousel — slow Ken Burns drift on the active slide only; duration is
+   set per-instance via inline style (display + transition time) so the zoom
+   finishes exactly as the crossfade to the next slide begins. */
+@keyframes hero-kenburns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+.hero-kenburns {
+  animation-name: hero-kenburns;
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: forwards;
+}
+
+/* Map pin pulse (contact page signature moment) */
+@keyframes fk-pin-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--saffron) 45%, transparent); }
+  70%  { box-shadow: 0 0 0 14px color-mix(in srgb, var(--saffron) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--saffron) 0%, transparent); }
+}
+.pin-pulse {
+  animation: fk-pin-pulse 2.4s var(--ease-soft) infinite;
+}
+
+/* Nav link underline — gold hairline wipes in from the left */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1.5px;
+  width: 100%;
+  background: var(--saffron);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after,
+.link-underline[aria-current]::after,
+.link-underline[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* Jali — Mughal lattice whisper, emerald bands only (3–6% opacity) */
+.jali {
+  background-image: var(--jali);
+  opacity: var(--jali-opacity);
+}
+
+/* Reduced motion: everything collapses to instant/simple states */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-seq [data-seq] { animation: none; }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .pin-pulse { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
