@@ -177,6 +177,10 @@ export default function CateringPage() {
             <h2 className="mt-s4 font-display text-display-l font-normal text-ink">
               Two minutes. We do the rest.
             </h2>
+            <p className="mx-auto mt-s3 max-w-[46ch] text-body text-stone">
+              Please allow at least 2 days&rsquo; notice for catering orders so we can prepare
+              your menu properly.
+            </p>
           </Reveal>
           <Reveal delay={80}>
             <QuoteForm />

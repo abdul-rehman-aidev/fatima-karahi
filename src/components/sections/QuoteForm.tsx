@@ -28,6 +28,14 @@ const STEPS = ["Service", "Event type", "Guest count", "Date", "Your details"] a
 
 const MIN_GUESTS = 25;
 const MAX_GUESTS = 2500;
+const LEAD_DAYS = 2;
+
+/** Earliest bookable event date (today + LEAD_DAYS), as YYYY-MM-DD. */
+function minEventDate(): string {
+  const d = new Date();
+  d.setDate(d.getDate() + LEAD_DAYS);
+  return d.toISOString().slice(0, 10);
+}
 
 type Values = {
   service: string;
@@ -78,15 +86,15 @@ export function QuoteForm() {
       if (!values.guests.trim()) next.guests = "A rough guest count helps us quote accurately.";
       else if (!Number.isFinite(n)) next.guests = "Please enter a number of guests.";
       else if (n < MIN_GUESTS)
-        next.guests = `We cater from ${MIN_GUESTS} guests up — for anything smaller, give us a call.`;
+        next.guests = `We cater from ${MIN_GUESTS} guests up. For anything smaller, give us a call.`;
       else if (n > MAX_GUESTS)
-        next.guests = `We cater up to ${MAX_GUESTS.toLocaleString()} guests — for anything larger, please call us directly.`;
+        next.guests = `We cater up to ${MAX_GUESTS.toLocaleString()} guests. For anything larger, please call us directly.`;
     }
     if (s === 3) {
-      // Optional — an event date isn't required to request a quote, so the
-      // only thing worth validating is a date that's already in the past.
-      if (values.date && values.date < new Date().toISOString().slice(0, 10))
-        next.date = "That date has passed; pick an upcoming one.";
+      // Optional — an event date isn't required to request a quote. If one
+      // is given, it just needs to clear our minimum catering lead time.
+      if (values.date && values.date < minEventDate())
+        next.date = `We need at least ${LEAD_DAYS} days' notice for catering orders. Please pick a later date.`;
     }
     if (s === 4) {
       if (!values.name.trim()) next.name = "We need a name to address the quote to.";
@@ -326,8 +334,8 @@ export function QuoteForm() {
               id="date"
               label="When is your event? (optional)"
               type="date"
-              hint="Don't have a date yet? Leave it blank and continue."
-              min={new Date().toISOString().slice(0, 10)}
+              hint={`We need at least ${LEAD_DAYS} days' notice. Don't have a date yet? Leave it blank and continue.`}
+              min={minEventDate()}
               value={values.date}
               onChange={(e) => set("date", e.target.value)}
               error={errors.date}
