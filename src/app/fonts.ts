@@ -9,8 +9,20 @@ import localFont from "next/font/local";
  * the bilingual logotype and headline lockups are a separate brand
  * requirement from the visual-identity refresh this file otherwise serves.
  *
- * adjustFontFallback is disabled so the fallback stacks stay exactly the
- * token stacks (Georgia / system-ui) rather than a synthesized metric match.
+ * adjustFontFallback: previously disabled ("false") so the fallback stacks
+ * stayed exactly the token stacks (Georgia / system-ui) rather than a
+ * synthesized metric match. That turned out to be a real perf bug (SEO
+ * final-check, Aug 28 2026): with no metric adjustment, the fallback serif
+ * and the real webfont render at different box sizes, so the hero headline
+ * visibly reflows on swap — Lighthouse measured a 0.237 layout-shift score
+ * (fails the <0.1 "good" CLS threshold) directly attributed to these three
+ * fonts loading, which also delayed when LCP was considered settled (8.1s).
+ * Re-enabled here with the closest matching system category (Next computes
+ * ascent/descent/line-gap/size-adjust overrides against that category so
+ * the fallback box matches the real font before swap) — the token fallback
+ * stacks (Georgia / system-ui) are kept as-is for the *font-family* list;
+ * only the metric-matching target changes. No visual change once the real
+ * webfont has loaded — this only fixes the pre-swap flash.
  */
 
 export const marcellus = localFont({
@@ -19,7 +31,7 @@ export const marcellus = localFont({
   display: "swap",
   preload: true,
   fallback: ["Georgia", "Times New Roman", "serif"],
-  adjustFontFallback: false,
+  adjustFontFallback: "Times New Roman",
 });
 
 export const cormorant = localFont({
@@ -31,7 +43,7 @@ export const cormorant = localFont({
   display: "swap",
   preload: true,
   fallback: ["Georgia", "Times New Roman", "serif"],
-  adjustFontFallback: false,
+  adjustFontFallback: "Times New Roman",
 });
 
 export const openSans = localFont({
@@ -43,7 +55,7 @@ export const openSans = localFont({
   display: "swap",
   preload: true,
   fallback: ["system-ui", "sans-serif"],
-  adjustFontFallback: false,
+  adjustFontFallback: "Arial",
 });
 
 export const allura = localFont({

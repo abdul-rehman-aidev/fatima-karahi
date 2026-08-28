@@ -1310,6 +1310,8 @@
   "parallax.jpg": {
     "hash": "7e3ea989d229f0bf4c7e56e495f9b1d78d4209f14fbe395b5917c568f41ddc27",
     "outputs": [
+      "public\\img\\parallax-1920.avif",
+      "public\\img\\parallax-1920.webp",
       "public\\img\\parallax-1920.jpg"
     ]
   },

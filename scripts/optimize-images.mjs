@@ -135,7 +135,23 @@ const SPECIALS = {
   // `position: sticky`, not a scroll-transformed layer, so it just needs to
   // fill a normal-aspect box (no extra vertical headroom to reveal as it
   // scrolls, unlike the transform-based approach this replaced).
+  //
+  // AVIF/WebP siblings added alongside the original JPEG (SEO final-check,
+  // Aug 28 2026): this is a CSS `background-image` (see ParallaxStatement),
+  // so it never went through <Picture> and was shipping one 300KB JPEG to
+  // every device regardless of format support. `.parallax-bg` in
+  // globals.css picks the smallest format each browser supports via
+  // `image-set()`, same crop/quality target either way — just smaller
+  // bytes, no visual change.
   parallax: [
+    {
+      dest: path.join(OUT, "parallax-1920.avif"),
+      run: (img) => img.resize(1920, 1000, { fit: "cover" }).avif({ quality: 55 }),
+    },
+    {
+      dest: path.join(OUT, "parallax-1920.webp"),
+      run: (img) => img.resize(1920, 1000, { fit: "cover" }).webp({ quality: 74 }),
+    },
     {
       dest: path.join(OUT, "parallax-1920.jpg"),
       run: (img) => img.resize(1920, 1000, { fit: "cover" }).jpeg({ quality: 78, mozjpeg: true }),

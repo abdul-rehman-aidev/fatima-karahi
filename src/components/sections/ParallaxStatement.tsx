@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Button } from "@/components/ds/Button";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -40,7 +41,9 @@ type ParallaxStatementProps = {
  *
  * CSS background (not <Picture>/<img>) is a deliberate choice: this image
  * is decorative (the copy carries the meaning), so it's `aria-hidden` with
- * no alt text needed.
+ * no alt text needed. Format fallback (AVIF → WebP → JPEG) is handled by
+ * `.parallax-bg` in globals.css via `image-set()`, fed by the three
+ * `--parallax-*` custom properties set below — see that rule's comment.
  */
 export function ParallaxStatement({
   image,
@@ -51,8 +54,14 @@ export function ParallaxStatement({
 }: ParallaxStatementProps) {
   return (
     <section
-      className="relative h-[55vh] min-h-[400px] overflow-hidden bg-emerald-deep bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: `url(/img/${image}-1920.jpg)` }}
+      className="parallax-bg relative h-[55vh] min-h-[400px] overflow-hidden bg-emerald-deep bg-cover bg-center bg-fixed"
+      style={
+        {
+          "--parallax-avif": `url(/img/${image}-1920.avif)`,
+          "--parallax-webp": `url(/img/${image}-1920.webp)`,
+          "--parallax-jpg": `url(/img/${image}-1920.jpg)`,
+        } as CSSProperties
+      }
     >
       {/* Emerald scrim — the site's standard treatment for type over imagery,
           never flat black. Flat wash (not a corner vignette) is enough here:

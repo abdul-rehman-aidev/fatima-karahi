@@ -419,3 +419,116 @@ already being handled — see note).
 6. **Re-run this audit against the live production domain** once deployed —
    IndexNow, CrUX field data, hosting-level headers, and sitemap discovery
    couldn't be tested against localhost.
+
+---
+
+# Final pre-launch check — local SEO / speed / crawlability (Aug 28, 2026)
+
+Re-verification against a freshly rebuilt `out/`, served with real gzip/brotli
+via `scripts/serve-compressed.mjs`. Scope: confirm what shipped since the
+Aug 16 audit, focused on local SEO, load speed, and crawlability.
+
+## Local SEO — 56 → ~76–82/100
+
+Fixed since Aug 16: full NAP + `GeoCoordinates` + `aggregateRating`
+(4.4★/1,231) in schema (`JsonLd.tsx`), E.164 phone, Maps CID deep-link,
+`acceptsReservations` corrected to `false`, `BreadcrumbList` on every page,
+named founder (Hamza Butt) + family origin story + chef credentialing,
+Edmonton + halal now in Home/Catering/Contact titles, dormant Instagram
+`sameAs` removed, three real reviews surfacing on-page with visible stars.
+
+Still open:
+- **GBP listing still resolves as "Fatima Karahi Corner" → old domain** —
+  client-owned, said to be "being handled," but not yet resolved. This is
+  the single biggest remaining local-SEO gap and should close at/before launch.
+- No Yelp/BBB/TripAdvisor citations confirmed (CAPTCHA-blocked at audit time).
+- Trust-band stats ("12+ years," "800+ daawats") still placeholder in `site.ts`.
+- Calgary location is acknowledged in FAQ copy but has no dedicated page.
+- Menu page `<title>` omits "Edmonton" (description has it; minor).
+
+## Crawlability / technical — 78 → ~90/100
+
+Fixed: `/gallery/` now in `sitemap.ts`/`sitemap.xml`, IndexNow key file +
+`indexnow-submit.mjs` wired to `npm run indexnow`, `BreadcrumbList` schema,
+tiered dish pricing now emits `AggregateOffer`, logo field + E.164 phone in
+schema. Verified directly against `localhost:4173/sitemap.xml` and
+`/robots.txt`: all 7 URLs present, correct canonicals/trailing slashes, no
+accidental noindex, AI crawlers (GPTBot, ClaudeBot, PerplexityBot,
+Google-Extended, CCBot) still explicitly allowed.
+
+FAQPage schema was deliberately *not* added — Google retired FAQ rich
+results (2026-05-07 per an in-code comment); real `<h3>` headings were used
+instead, which is the right call.
+
+Still unverifiable pre-launch (needs the live domain): HSTS/CSP/security
+headers, IndexNow submission acceptance, CrUX field data.
+
+## Load speed — real regression found, not the same picture as Aug 16
+
+The two headline Aug 16 performance bugs are genuinely fixed:
+- **Logo**: was 160KB PNG at 573×436 shown at 58×44; now a real 11KB PNG at
+  242×184 (`public/brand/fatima-logo.png`, `Logotype.tsx`) — no longer an
+  LCP blocker.
+- **Fonts**: Gulzar (208KB Urdu font) no longer preloads site-wide; all
+  fonts use `display: "swap"`.
+- `/gallery` lightbox library removed entirely (batched CSS grid instead);
+  `/contact` map is now click-to-load, not loaded on paint.
+
+**New regression found via a clean Lighthouse mobile run (simulated
+throttling, homepage):** LCP 8.1s, CLS 0.237 — both "Poor," a real drop from
+the 1.1s / 0.004 in the Aug 16 Gate 2 numbers. Root-caused, not just
+measurement noise: `layout-shifts` audit isolates one shift (score 0.237)
+in `div.hero-seq` — the hero headline block — attributed directly to three
+web fonts loading (Marcellus, Cormorant, Open Sans). The cause is
+`adjustFontFallback: false` on all three in `src/app/fonts.ts:16-47`,
+which was set deliberately for brand-fidelity reasons but disables Next's
+automatic fallback-metric matching — so the fallback serif and the real
+webfont render at different metrics, and the hero text block visibly
+reflows on swap, which is large enough to also push out when the LCP
+element is considered "settled." This font setup postdates the Aug 16 audit
+(the file's own comment ties it to a later visual-identity refresh), so
+this isn't a regression that audit could have caught.
+
+**Fixed same day.** `adjustFontFallback` re-enabled on Marcellus/Cormorant
+(`"Times New Roman"`) and Open Sans (`"Arial"`) in `src/app/fonts.ts` — Next
+now computes ascent/descent/line-gap/size-adjust overrides so the fallback
+serif/sans render at the real webfont's box size before swap. Token
+`fallback` stacks (Georgia / system-ui) are unchanged; only the metric
+target changed, so there's no visual difference once the webfont loads —
+only the pre-swap flash is gone.
+
+**Verified, not just applied** — rebuilt and re-measured with a clean
+Lighthouse pass (`--throttling-method=provided`, desktop, isolating real
+page cost from this sandbox's own CPU contention, which independently
+proved to inflate simulated-mobile-throttle numbers ~5x in a controlled
+test): **CLS 0.237 → 0.0006, stable at 0 across 4 consecutive runs**
+(throttled and unthrottled). LCP 1.4s, FCP 0.78s, TBT 39ms, TTI 1.36s,
+Performance 87, Accessibility 97, SEO 100, Best Practices 100.
+
+**Second, related fix found and shipped in the same pass:** the homepage's
+"mood moment" parallax section (`ParallaxStatement.tsx`) sets its background
+via CSS (never goes through `<Picture>`), and was shipping one hardcoded
+300KB JPEG-only image to every device. Added AVIF (197KB, −34%) and WebP
+(239KB) siblings to `scripts/optimize-images.mjs`'s `parallax` job, and a
+`.parallax-bg` rule in `globals.css` using `image-set()` (three
+`--parallax-*` custom properties set per-instance) so capable browsers get
+the smaller format automatically, with the plain JPEG `url()` as the
+invalid-value fallback for anything that doesn't understand `image-set()`.
+Total page weight 1,369KB → 1,300KB. No visual change — same crop, same
+quality target, just smaller bytes.
+
+Two pre-existing, unrelated Accessibility findings surfaced by this same
+Lighthouse run (`color-contrast`, `label-content-name-mismatch`) —
+untouched by either fix above, flagged here rather than silently left out.
+
+## Updated priority list
+
+1. ~~Fix the hero font-swap CLS regression~~ — **done, verified 0 CLS across
+   4 runs.**
+2. Close the GBP name/domain mismatch before or at launch (client-owned).
+3. Add Yelp/BBB listings once accessible without CAPTCHA.
+4. Confirm real trust-band stats with the owner.
+5. Investigate the two accessibility findings above (`color-contrast`,
+   `label-content-name-mismatch`) — pre-existing, not part of this pass.
+6. Re-run this check against the live domain post-launch for CrUX/IndexNow/
+   security-header verification.

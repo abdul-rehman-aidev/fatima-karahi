@@ -310,6 +310,28 @@ body {
   animation-fill-mode: forwards;
 }
 
+/* ParallaxStatement's CSS background-image — never goes through <Picture>,
+   so it needs its own multi-format fallback chain (SEO final-check, Aug 28
+   2026: this was shipping a single 300KB JPEG to every browser). The three
+   `--parallax-*` custom properties are set per-instance in the component;
+   `image-set()` picks the smallest format the browser supports, falling
+   back to the plain `url()` declaration above it on browsers that don't
+   understand `image-set()` at all (invalid-value fallback, not a media
+   query — nothing to keep in sync). */
+.parallax-bg {
+  background-image: var(--parallax-jpg);
+  background-image: -webkit-image-set(
+    var(--parallax-avif) type("image/avif"),
+    var(--parallax-webp) type("image/webp"),
+    var(--parallax-jpg) type("image/jpeg")
+  );
+  background-image: image-set(
+    var(--parallax-avif) type("image/avif"),
+    var(--parallax-webp) type("image/webp"),
+    var(--parallax-jpg) type("image/jpeg")
+  );
+}
+
 /* Map pin pulse (contact page signature moment) */
 @keyframes fk-pin-pulse {
   0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--saffron) 45%, transparent); }
