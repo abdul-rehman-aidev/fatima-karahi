@@ -4,6 +4,7 @@ import { AboutStory } from "@/components/sections/AboutStory";
 import { AboutVideoBanner } from "@/components/sections/AboutVideoBanner";
 import { AboutTestimonials } from "@/components/sections/AboutTestimonials";
 import { FounderSection } from "@/components/sections/FounderSection";
+import { TeamSection } from "@/components/sections/TeamSection";
 import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function AboutPage() {
       <AboutVideoBanner />
       <AboutTestimonials />
       <FounderSection />
+      <TeamSection />
       <BreadcrumbJsonLd name="About" path="/about/" />
     </>
   );
