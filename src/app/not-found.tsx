@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import { BrandMark } from "@/components/ds/BrandMark";
 import { Button } from "@/components/ds/Button";
+
+// SEO audit Low #7 — was inheriting the site default title instead of its
+// own distinct "Page not found" title.
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

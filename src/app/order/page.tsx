@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { OrderInterstitial } from "@/components/sections/OrderInterstitial";
+import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
 
 export const metadata: Metadata = {
   title: "Order online",
   description:
-    "Order Fatima Karahi online: hot Lahori karahi, charcoal BBQ and fresh tandoor bread, delivered across Edmonton.",
+    "Order Fatima Karahi online: hot Pakistani karahi, charcoal BBQ and fresh tandoor bread, delivered across Edmonton.",
   alternates: { canonical: "/order" },
   // Indexable: the page carries a real H1, description and CTA, and Lighthouse's
   // SEO gate (>=95) fails a noindex page outright. An earlier draft set
@@ -12,5 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default function OrderPage() {
-  return <OrderInterstitial />;
+  return (
+    <>
+      <OrderInterstitial />
+      <BreadcrumbJsonLd name="Order Online" path="/order/" />
+    </>
+  );
 }

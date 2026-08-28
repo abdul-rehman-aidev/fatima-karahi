@@ -87,7 +87,7 @@ export const menu: MenuCategory[] = [
       {
         name: "Fish Pakoras",
         urdu: "فش پکوڑے",
-        price: "$14.99",
+        price: "$15.99",
         desc: "Deep-fried basa fillets mix with gram flour.",
       },
       {
@@ -107,13 +107,13 @@ export const menu: MenuCategory[] = [
       {
         name: "Beef Kebab",
         urdu: "بیف کباب",
-        price: "$15.99",
+        price: "$16.99",
         desc: "Finely minced beef with spices and herbs grilled in the clay oven.",
       },
       {
         name: "Chicken Kebab",
         urdu: "چکن کباب",
-        price: "$15.99",
+        price: "$16.99",
         desc: "Minced chicken marinated with spices grilled in the clay oven.",
       },
       {
@@ -150,21 +150,15 @@ export const menu: MenuCategory[] = [
         desc: "Beef steak with mashed potatoes.",
       },
       {
-        name: "Beef Ribs",
-        urdu: "بیف رِبز",
-        price: "$21.99",
-        desc: "Tender beef ribs seasoned with our special spice blend, red chilli, and black pepper, finished with fresh lemon zest.",
-      },
-      {
         name: "Tandoori Fish",
         urdu: "تندوری مچھلی",
         price: "$21.99",
-        desc: "Tandoor-grilled fish marinated with red chilli, salt, and fresh lemon juice. Served hot on a sizzling platter.",
+        desc: "Tandoor-grilled Basa fillet marinated with red chilli, salt, and fresh lemon juice. Served hot on a sizzling platter.",
       },
       {
         name: "Platter",
         urdu: "پلیٹر",
-        price: "$36.99",
+        price: "$38.99",
         desc: "Beef Kebab OR Chicken Kebab, Chicken Tikka & Fish.",
       },
       {
@@ -176,7 +170,7 @@ export const menu: MenuCategory[] = [
       {
         name: "Chicken Malai Boti",
         urdu: "چکن ملائی بوٹی",
-        price: "$17.99",
+        price: "$18.99",
         desc: "Chicken marinated with spices, milk, and yogurt grilled in the clay oven with a topping of mozzarella cheese.",
       },
     ],
@@ -191,7 +185,7 @@ export const menu: MenuCategory[] = [
         name: "Chicken Karahi",
         urdu: "چکن کڑاہی",
         priceTiers: [
-          { label: "½ kg", price: "$27.99" },
+          { label: "½ kg", price: "$28.99" },
           { label: "1 kg", price: "$47.99" },
         ],
         desc: "Chicken cooked in Karahi using our special mixed spices and our signature gravy.",
@@ -200,7 +194,7 @@ export const menu: MenuCategory[] = [
         name: "Boneless Chicken",
         urdu: "بون لیس چکن کڑاہی",
         priceTiers: [
-          { label: "½ kg", price: "$29.99" },
+          { label: "½ kg", price: "$30.99" },
           { label: "1 kg", price: "$49.99" },
         ],
         desc: "Boneless chicken cooked in Karahi using our mixed spices and our signature gravy.",
@@ -209,7 +203,7 @@ export const menu: MenuCategory[] = [
         name: "Chicken Achari",
         urdu: "چکن اچاری",
         priceTiers: [
-          { label: "½ kg", price: "$28.99" },
+          { label: "½ kg", price: "$29.99" },
           { label: "1 kg", price: "$47.99" },
         ],
         spice: 2,
@@ -219,7 +213,7 @@ export const menu: MenuCategory[] = [
         name: "Chicken Ginger",
         urdu: "چکن جنجر",
         priceTiers: [
-          { label: "½ kg", price: "$28.99" },
+          { label: "½ kg", price: "$29.99" },
           { label: "1 kg", price: "$47.99" },
         ],
         desc: "Chicken cooked in Karahi using our mixed spices, ginger and our signature gravy.",
@@ -228,7 +222,7 @@ export const menu: MenuCategory[] = [
         name: "Chicken White",
         urdu: "چکن وائٹ کڑاہی",
         priceTiers: [
-          { label: "½ kg", price: "$30.99" },
+          { label: "½ kg", price: "$31.99" },
           { label: "1 kg", price: "$49.99" },
         ],
         desc: "Boneless chicken cooked in Karahi using our mixed spices and signature gravy.",
@@ -237,7 +231,7 @@ export const menu: MenuCategory[] = [
         name: "Qeema Karahi",
         urdu: "قیمہ کڑاہی",
         priceTiers: [
-          { label: "½ kg", price: "$31.99" },
+          { label: "½ kg", price: "$32.99" },
           { label: "1 kg", price: "$49.99" },
         ],
         desc: "Minced Chicken Queema cooked in Karahi with our mixed spices and signature gravy.",
@@ -389,23 +383,23 @@ export const menu: MenuCategory[] = [
       {
         name: "Chicken Biryani",
         urdu: "چکن بریانی",
-        price: "$16.99",
+        price: "$17.99",
         desc: "Aromatic rice and tender chicken slow-cooked on “dum” with our special masala. Served with fresh raita.",
       },
       {
         name: "Chicken Tikka Biryani",
         urdu: "چکن تکہ بریانی",
-        price: "$17.99",
+        price: "$18.99",
       },
       {
         name: "Veggie Biryani",
         urdu: "ویجی بریانی",
-        price: "$12.99",
+        price: "$13.99",
       },
       {
         name: "Lamb Biryani",
         urdu: "لیمب بریانی",
-        price: "$16.99",
+        price: "$17.99",
       },
       {
         name: "Plain Rice",
@@ -426,8 +420,8 @@ export const menu: MenuCategory[] = [
       {
         name: "Pulao Rice",
         urdu: "پلاؤ چاول",
-        price: "$17.99",
-        desc: "Choice of: Chicken Kebab, Beef Kebab, Chicken Tikka, or Malai Boti.",
+        price: "$18.99",
+        desc: "Choice of: Chicken Kebab, Beef Kebab, Chicken Tikka, or Malai Boti. Fragrant basmati rice gently cooked with aromatic spices and savoury broth for a delicious, flavourful dish.",
       },
       {
         name: "Kabuli Pulao",
@@ -470,7 +464,7 @@ export const menu: MenuCategory[] = [
       {
         name: "Chicken Chow Mein",
         urdu: "چکن چاؤ مین",
-        price: "$15.99",
+        price: "$16.99",
         desc: "Stir-fried noodles with tender chicken and fresh vegetables.",
       },
     ],
@@ -479,18 +473,19 @@ export const menu: MenuCategory[] = [
     id: "kebab-karahi",
     label: "Kebab Karahi",
     urdu: "کباب کڑاہی",
+    note: "All Boneless",
     image: "menu-kebab-karahi",
     dishes: [
       {
         name: "Beef Kebab Karahi",
         urdu: "بیف کباب کڑاہی",
-        price: "$25.99",
+        price: "$27.99",
         desc: "Beef grilled in clay oven and cooked with signature gravy. All boneless.",
       },
       {
         name: "Chicken Kebab Karahi",
         urdu: "چکن کباب کڑاہی",
-        price: "$25.99",
+        price: "$27.99",
         desc: "Chicken grilled in clay oven and cooked with signature gravy. All boneless.",
       },
       {
@@ -703,17 +698,17 @@ export const menu: MenuCategory[] = [
       {
         name: "Mango Lassi",
         urdu: "مینگو لسی",
-        price: "$6.99",
+        price: "$7.99",
       },
       {
         name: "Salty Lassi",
         urdu: "نمکین لسی",
-        price: "$6.99",
+        price: "$7.99",
       },
       {
         name: "Sweet Lassi",
         urdu: "میٹھی لسی",
-        price: "$6.99",
+        price: "$7.99",
       },
       {
         name: "Lemon Water",
@@ -810,11 +805,6 @@ export const menu: MenuCategory[] = [
         price: "$16.99",
       },
       {
-        name: "Beef Paya",
-        urdu: "بیف پائے",
-        price: "$16.99",
-      },
-      {
         name: "Omelette",
         urdu: "آملیٹ",
         price: "$8.99",
@@ -827,7 +817,7 @@ export const menu: MenuCategory[] = [
       {
         name: "Kulcha",
         urdu: "قلچہ",
-        price: "$3.99",
+        price: "$4.99",
       },
       {
         name: "Lachha Paratha",
@@ -844,12 +834,12 @@ export const menu: MenuCategory[] = [
       {
         name: "Sweet Lassi",
         urdu: "میٹھی لسی",
-        price: "$6.99",
+        price: "$7.99",
       },
       {
         name: "Salty Lassi",
         urdu: "نمکین لسی",
-        price: "$6.99",
+        price: "$7.99",
       },
       {
         name: "Desi Chai",

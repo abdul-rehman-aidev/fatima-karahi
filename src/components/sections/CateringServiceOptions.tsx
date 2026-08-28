@@ -25,7 +25,8 @@ export function CateringServiceOptions({ options }: { options: CateringServiceOp
             Two ways to bring Fatima Karahi to your event
           </h2>
           <p className="text-body-l text-stone">
-            Host it with us, or have us come to you — either way, it&rsquo;s the same kitchen.
+            Host it with us, or have us come to you — either way, it&rsquo;s the same kitchen,
+            built to cater anywhere from 25 to 2,500 guests.
           </p>
         </Reveal>
 

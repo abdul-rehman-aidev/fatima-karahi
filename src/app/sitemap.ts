@@ -10,6 +10,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/about/`, lastModified: now, changeFrequency: "yearly", priority: 0.6 },
     { url: `${site.url}/menu/`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${site.url}/catering/`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    // Was missing entirely (SEO audit Critical #1) — real, indexable,
+    // nav-linked page with its own canonical that was silently absent here.
+    { url: `${site.url}/gallery/`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${site.url}/contact/`, lastModified: now, changeFrequency: "yearly", priority: 0.6 },
     { url: `${site.url}/order/`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];

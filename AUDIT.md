@@ -207,3 +207,215 @@ Every value below lives in exactly one file — `src/data/site.ts` unless noted:
   placeholder tile; alt text throughout is flagged `TODO(client)` where it
   describes a placeholder rather than final photography
 - **Contact map** — pin position is eyeballed for the placeholder address; confirm once the real address is set
+
+---
+
+# SEO audit — pre-launch (Aug 16, 2026)
+
+Nine specialist passes across 7 pages (schema, content/E-E-A-T, sitemap,
+GEO/AI-search, local/GBP, search-experience/SXO, performance, visual/mobile,
+technical). The dev server (`localhost:3000`) was used for content/structure
+checks; a freshly rebuilt production static export (`localhost:4173`) was
+used for performance, visual, and technical checks, since dev mode
+understates real-world speed. Domain (`fatimakarahi.ca`) is not live yet, so
+CrUX field data, IndexNow, and hosting-level headers are unverified.
+
+**SEO Health Score: 68/100** (weighted)
+
+| Category | Weight | Score |
+|---|---|---|
+| Content Quality | 23% | 58 |
+| Technical SEO | 22% | 78 |
+| On-Page SEO | 20% | 72 |
+| Performance (CWV) | 10% | 71 |
+| Schema | 10% | 68 |
+| AI Search (GEO) | 10% | 55 |
+| Images | 5% | 65 |
+
+**Local SEO: 56/100** (supplementary score, not in the weighted total above —
+driven down almost entirely by the GBP/legacy-site item below, which is
+already being handled — see note).
+
+## Acknowledged, already being handled
+
+- **GBP currently points at the old live site (`fatimakarahicorner.com`).**
+  Every third-party listing (DoorDash, Zabihah, RestaurantGuru, Apple Maps,
+  Wheree) also carries the name "Fatima Karahi Corner" rather than "Fatima
+  Karahi." **Client confirmed this is being fixed** — not treated as an open
+  blocker here, but the eventual fix (repoint GBP's website field, decide the
+  canonical name, redirect/retire the old domain) should happen before or at
+  launch so the new site and the live listing agree.
+
+## Still open
+
+- **`sameAs` schema links to an Instagram account that isn't this
+  business** (`instagram.com/fatimakarahi` — a dormant, unrelated Calgary
+  account, inactive since 2019). Quick code fix once the real handle is
+  confirmed, or remove until one exists. `src/components/chrome/JsonLd.tsx`
+
+## Critical
+
+1. **`/gallery/` missing from `sitemap.ts`** — a real, indexable,
+   nav-linked page with its own canonical, silently absent from the sitemap.
+   Caught independently by the sitemap, technical, and content passes.
+   Fix: add the entry in `src/app/sitemap.ts`.
+2. **An oversized, unoptimized logo is the homepage's actual LCP element.**
+   `brand/fatima-logo.png` ships at 160KB, displayed at 58×44 but natively
+   573×436 (~10× oversized), preloaded on every page, never run through the
+   site's own AVIF/WebP pipeline — Lighthouse identifies it, not the hero
+   photo, as what's holding up paint, pushing mobile LCP to 8.5s ("Poor").
+   Fix: run it through `scripts/optimize-images.mjs`, export at real display
+   size (×2 for retina). Highest-leverage single fix in the audit.
+3. **Trust-band stats ship as fact but are explicitly unverified.**
+   "12+ Years serving," "800+ Daawats catered" render as confident animated
+   numerals, but `site.ts` itself flags them `TODO(client): confirm the
+   numbers` — and "12+ years" doesn't reconcile with the known brand
+   timeline. Fix: get real numbers from the owner before launch, or drop the
+   stat.
+
+## High
+
+1. **18 ready FAQ answers carry zero `FAQPage` schema, and aren't even real
+   headings.** The content is already written in exactly the shape AI answer
+   engines want (direct, self-contained, 40–90 words), but nothing wraps it
+   in `FAQPage` JSON-LD, and each question renders as a `<span>` inside a
+   button, not an `<h3>`. Fix: add an `FAQJsonLd` component from the existing
+   `faq.ts` data, wrap questions in real heading tags. Lowest effort,
+   highest-ROI item in the whole audit.
+2. **Schema still claims `acceptsReservations: true` — now inaccurate.**
+   Direct regression from removing the online reservation form earlier this
+   build. Fix: set to `false` in `JsonLd.tsx` (or represent phone
+   reservations differently).
+3. **No visible rating anywhere on-site**, despite a real ~4.4★ Google
+   rating and real attributed reviews already living in `site.ts`; meanwhile
+   the About page's meta description already *claims* "4.3-star reputation"
+   with nothing backing it. Fix: confirm the live number, add
+   `aggregateRating` to the Restaurant schema, surface a badge near the
+   testimonials.
+4. **Missing `geo` coordinates in LocalBusiness schema** — the exact
+   lat/long already sits inside the embedded Maps iframe URL (53.4254,
+   −113.5031), unused. Fix: add a `GeoCoordinates` block. Five-minute fix.
+5. **No named founder and no first-hand "who is Fatima" story on
+   `/about`.** Never names a person, credits a chef, or tells the actual
+   Lahore → Calgary → Edmonton family story (that detail only lives in two
+   sentences on the homepage). Persona scoring independently confirms this:
+   About is the weakest page on the site (42/100) for exactly the "diaspora
+   craving authenticity" audience the brand strategy targets. Fix: add a
+   real founder/family bio with name, photo, and the origin story.
+6. **Mobile load speed is "Poor" on 5 of 7 pages.** LCP 5.7–8.5s and TTI
+   6–9s on Home, Menu, Catering, About, Gallery (real Lighthouse mobile
+   traces) — driven by ~1.5–2s of render-blocking CSS and 324KB across five
+   unsubset web-font files. Fix: inline critical CSS / confirm Next's CSS
+   splitting is active, subset fonts.
+7. **Homepage `<title>` omits "Edmonton" and "halal."** The one title tag
+   most likely to be lifted as the canonical entity title by an AI engine
+   carries neither; every competitor checked leads with both. `/catering`'s
+   title also omits Edmonton. Fix: e.g. "Fatima Karahi: Halal Pakistani
+   Restaurant in Edmonton," keep the tagline in the H1.
+8. **Five live FAQ answers state unconfirmed facts as "yes."** Group/
+   private-event bookings, spice-level policy, off-site catering, parking,
+   gift cards — all worded as confident answers despite `faq.ts` flagging
+   every one `needsConfirmation: true`. Fix: get owner sign-off before
+   launch, or soften wording until confirmed.
+9. **No IndexNow key or submission wired up.** Fix: generate a key, add the
+   `public/<key>.txt` file, script a submission on sitemap changes.
+
+## Medium
+
+1. No `BreadcrumbList` schema anywhere, despite an ideal flat structure for it.
+2. Tiered-price dishes (e.g. Beef Karahi ½kg/1kg) collapse to one unlabeled
+   price in Menu schema — only the first tier is emitted.
+3. Missing `logo` property in Restaurant schema despite the asset already
+   existing and being used elsewhere.
+4. No direct Maps CID deep-link / "Get Directions" CTA — `mapsUrl` is an
+   unused generic text-search string.
+5. Phone not in E.164 format in schema (`(780) 705-5000` vs.
+   `+17807055000`, which is already used correctly elsewhere in the same file).
+6. `/order/` is thin (one H1 + ~15 words) and does a silent client-side JS
+   redirect to the ordering platform that flashes the branded shell first
+   and breaks its own Lighthouse performance trace.
+7. Only one testimonial is reused verbatim across Home/About/Catering
+   despite 3 real named reviews existing in the data.
+8. Duplicate/generic alt text on 3 of 4 homepage carousel images (identical
+   string repeated).
+9. `/gallery/` has the worst main-thread cost of any page (491ms TBT, 3.7s
+   of work) — defer lightbox JS, verify full lazy-loading.
+10. `/contact/` pulls 632KB of scripts / 516KB third-party weight (map or
+    widget) — facade or lazy-load it.
+11. No jump-navigation across 18 menu categories (~80 items, one long scroll).
+12. Halal badge is a small unlabeled icon — competitors state "100%
+    Halal-certified" explicitly in text.
+13. Gallery intro copy repeats "halal Pakistani restaurant in Edmonton"
+    three times in ~230 words.
+14. `site.url` production domain is still `TODO(client)`-flagged in source
+    despite being wired into every canonical/OG/JSON-LD/sitemap URL — needs
+    written confirmation before launch.
+15. No chef/kitchen-team credentialing anywhere — a planned differentiator
+    vs. the primary competitor per project notes.
+16. Bing Maps lists the wrong street number (10626 vs. correct 10680
+    Ellerslie Rd SW).
+17. Facebook `sameAs` link is unverified (login-walled, already
+    TODO-flagged in source).
+
+## Low
+
+1. Sitemap `lastmod` is identical across every URL (build-timestamp
+   artifact, weak freshness signal).
+2. Sitemap `priority`/`changefreq` fields are ignored by Google — harmless,
+   optional to simplify.
+3. No `WebSite` schema — fine, no on-site search feature exists.
+4. No review/publish dates anywhere on the site (no recency signal).
+5. A few menu descriptions are non-descriptive filler (e.g. "Shrimps fried
+   in a special recipe").
+6. `size="sm"` buttons may sit under the 44px touch-target guidance on
+   mobile CTAs — worth a visual check.
+7. 404 page keeps the default site title instead of a distinct "Page not
+   found" title.
+8. ~11KB of legacy JS polyfill overhead per page — browserslist target
+   could narrow.
+9. Uber Eats rating (3.8★/120) is notably lower than Google's (4.4★) — worth
+   monitoring separately, not a site issue.
+10. No Yelp/TripAdvisor listings confirmed — searches were CAPTCHA-blocked
+    (inconclusive, not confirmed-absent); worth the client checking directly
+    while logged in.
+
+## Passed / strengths
+
+- Fully static, pre-rendered HTML — zero JS-dependency for content, verified
+  on all 7 pages.
+- `robots.txt` allows every AI crawler checked (GPTBot, ClaudeBot,
+  PerplexityBot, Google-Extended, CCBot, and more) — ahead of the named
+  primary competitor on this exact point.
+- Clean URL structure, correct canonicals throughout, no accidental
+  noindex, proper 404 handling.
+- Layout shift is a non-issue anywhere — 0.0003–0.017 on every page, far
+  under the "good" threshold.
+- Both JSON-LD blocks are syntactically valid, use no deprecated types, and
+  are single-sourced from the site's own data files.
+- The Catering page is the strongest page on the whole site by persona
+  scoring (82/100) — structurally deeper than every competitor checked.
+- Real structured Menu/MenuItem/Offer schema across ~80 dishes — most
+  competitors carry no structured menu data at all.
+- Real NAP, halal badge, family-owned messaging, and a live GBP-verified map
+  embed present wherever it matters.
+
+## Sequenced action plan
+
+1. **Batch the quick schema & sitemap fixes into one PR** — gallery
+   sitemap entry, geo coordinates, logo field, E.164 phone, Maps deep-link,
+   `acceptsReservations` correction, `sameAs` cleanup. All touch the same two
+   files, cheap to ship together.
+2. **Ship FAQPage schema and real heading tags** — independent of
+   everything else, highest ROI-to-effort ratio in the audit.
+3. **Fix the logo and the render-blocking CSS/fonts together** — the two
+   dominant performance levers; verify with one Lighthouse re-run instead of
+   two.
+4. **Collect the outstanding facts from the owner** — real trust-band
+   numbers, current GBP rating, the five unconfirmed FAQ policies, final
+   domain confirmation. Track as one checklist so it doesn't quietly slip.
+5. **Content depth pass** — founder story, order-page copy, testimonial
+   variety, menu navigation, halal copy, chef credentialing. Can run in
+   parallel with the steps above.
+6. **Re-run this audit against the live production domain** once deployed —
+   IndexNow, CrUX field data, hosting-level headers, and sitemap discovery
+   couldn't be tested against localhost.

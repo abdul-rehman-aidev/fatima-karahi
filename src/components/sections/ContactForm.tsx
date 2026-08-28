@@ -5,23 +5,31 @@ import { Button } from "@/components/ds/Button";
 import { Field } from "@/components/ds/Field";
 import { submitForm } from "@/lib/forms";
 
-/** Short contact form — name + message, same pluggable endpoint as the quote form. */
+/**
+ * General contact / query form — name, phone, and message, same pluggable
+ * endpoint as the quote form. This is the site's one catch-all "reach out
+ * for anything" form (the restaurant doesn't run an online table-reservation
+ * system, so there's deliberately no date/time/party-size booking flow
+ * anywhere on the site).
+ */
 export function ContactForm() {
-  const [values, setValues] = useState({ name: "", message: "" });
-  const [errors, setErrors] = useState<{ name?: string; message?: string }>({});
+  const [values, setValues] = useState({ name: "", phone: "", message: "" });
+  const [errors, setErrors] = useState<{ name?: string; phone?: string; message?: string }>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next: typeof errors = {};
     if (!values.name.trim()) next.name = "Please tell us your name.";
+    if (!/^[+\d][\d\s().-]{6,}$/.test(values.phone.trim()))
+      next.phone = "Enter a phone number we can reach you on.";
     if (!values.message.trim()) next.message = "Add a short message so we know how to help.";
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
     setStatus("submitting");
     try {
-      await submitForm("contact", values);
+      await submitForm("query", values);
       setStatus("success");
     } catch {
       setStatus("error"); // values stay in state — nothing is lost
@@ -59,6 +67,21 @@ export function ContactForm() {
           setErrors((er) => ({ ...er, name: undefined }));
         }}
         error={errors.name}
+      />
+      <Field
+        id="contact-phone"
+        label="Phone number"
+        type="tel"
+        inputMode="tel"
+        placeholder="+1 780 …"
+        required
+        autoComplete="tel"
+        value={values.phone}
+        onChange={(e) => {
+          setValues((v) => ({ ...v, phone: e.target.value }));
+          setErrors((er) => ({ ...er, phone: undefined }));
+        }}
+        error={errors.phone}
       />
       <Field
         id="contact-message"

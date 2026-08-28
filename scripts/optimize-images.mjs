@@ -53,6 +53,31 @@ const JOBS = {
   "menu-drinks": [480, 828, 1200],
   "menu-shakes": [480, 828, 1200],
   "menu-desserts": [480, 828, 1200],
+  // Gallery page collage (55 photos: 33 professionally shot + 22 real
+  // customer photos) — masters already resized/re-encoded to a web-appropriate
+  // size (long edge capped ~2000px) by a one-off script; see
+  // assets-src/gallery-manifest.json for the source mapping. Same widths as
+  // every other card/grid image in this file since GalleryGrid's <Picture>
+  // calls request the same [480, 828, 1200] set regardless of tile role.
+  ...Object.fromEntries(
+    Array.from({ length: 33 }, (_, i) => [`gallery-pro-${String(i + 1).padStart(2, "0")}`, [480, 828, 1200]]),
+  ),
+  ...Object.fromEntries(
+    Array.from({ length: 22 }, (_, i) => [`gallery-nat-${String(i + 1).padStart(2, "0")}`, [480, 828, 1200]]),
+  ),
+  // Catering page "Occasions" rail (data/catering.ts occasions[]) — one
+  // dedicated photo per occasion, replacing the reused/placeholder photos
+  // the section launched with. Same [480, 828, 1200] set as OccasionCard's
+  // <Picture> call.
+  "occasion-corporate-lunch": [480, 828, 1200],
+  "occasion-walima": [480, 828, 1200],
+  "occasion-mehndi": [480, 828, 1200],
+  "occasion-daawat": [480, 828, 1200],
+  "occasion-community-mosque": [480, 828, 1200],
+  "occasion-dinner-party": [480, 828, 1200],
+  "occasion-birthday-party": [480, 828, 1200],
+  "occasion-anniversary": [480, 828, 1200],
+  "occasion-corporate-events": [480, 828, 1200],
 };
 
 const FORMATS = [

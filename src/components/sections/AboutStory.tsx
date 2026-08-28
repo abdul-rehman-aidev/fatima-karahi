@@ -26,9 +26,21 @@ export function AboutStory() {
           <h2 className="mb-s4 mt-s4 font-display text-display-l font-normal text-ink">About us</h2>
           <Divider tone="line" width={100} className="mb-s5" />
 
+          {/* SEO audit High #5: this page previously never named a person,
+              never mentioned the Lahore → Calgary → Edmonton family history,
+              and read as generic "modern Pakistani kitchen" copy that could
+              describe any restaurant — the persona-scoring pass independently
+              flagged About as the weakest page on the site (42/100) for
+              exactly this reason. The real journey already existed on the
+              homepage (StoryBand); it's brought here instead of inventing new
+              specifics we can't verify. A named founder bio/photo is still a
+              TODO(client) — see AUDIT.md — since no real name is on record
+              anywhere in this project's source material. */}
           <p className="max-w-[52ch] text-body text-stone">
-            Fatima Karahi is a modern Pakistani kitchen where bold flavors, rich traditions, and
-            genuine hospitality come together.
+            Fatima Karahi began in the kitchens of Lahore, grew up in Calgary, and has now brought
+            those same recipes to Edmonton. It&rsquo;s a family-owned, family-run kitchen — that
+            ownership shapes the recipes and the hospitality alike, not just the name above the
+            door.
           </p>
           <p className="mt-s4 max-w-[52ch] text-body text-stone">
             Inspired by generations of family recipes and the vibrant culinary heritage of
@@ -37,7 +49,7 @@ export function AboutStory() {
           </p>
           <p className="mt-s4 max-w-[52ch] text-body text-stone">
             We believe great food starts with quality ingredients, thoughtful preparation, and
-            the joy of sharing a meal. From our signature karahis to every handcrafted dish,
+            the joy of sharing a meal. From our signature halal karahis to every handcrafted dish,
             everything is made to bring people together.
           </p>
           <p className="mt-s4 max-w-[52ch] text-body text-stone">

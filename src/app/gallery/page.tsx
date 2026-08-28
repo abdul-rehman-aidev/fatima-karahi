@@ -3,7 +3,8 @@ import { Divider } from "@/components/ds/Divider";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { GalleryGrid } from "@/components/sections/GalleryGrid";
-import { galleryImages } from "@/data/gallery";
+import { galleryTiles } from "@/data/gallery";
+import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
 
 export const metadata: Metadata = {
   title: "Gallery: inside Fatima Karahi",
@@ -42,15 +43,19 @@ export default function GalleryPage() {
             spreads, warm lighting, and the kind of hospitality that makes a room feel like home.
           </p>
           <p className="mt-s4 text-body text-sage">
-            Whether you&rsquo;re searching for a halal restaurant in Edmonton for a quiet dinner or
-            planning a larger celebration, Fatima Karahi welcomes you in. This gallery is a small
-            window into what a night with us looks like, from the karahi hitting the table to the
-            last cup of chai. Come see it, and taste it, for yourself.
+            {/* SEO audit Medium #13: this paragraph repeated "halal Pakistani
+                restaurant in Edmonton" for a third time in ~230 words —
+                reworded to vary the phrasing instead of restating it. */}
+            Whether you&rsquo;re after a quiet dinner or planning a larger celebration, Fatima Karahi
+            welcomes you in. This gallery is a small window into what a night with us looks like,
+            from the karahi hitting the table to the last cup of chai. Come see it, and taste it,
+            for yourself.
           </p>
         </Reveal>
       </section>
 
-      <GalleryGrid images={galleryImages} />
+      <GalleryGrid tiles={galleryTiles} />
+      <BreadcrumbJsonLd name="Gallery" path="/gallery/" />
     </>
   );
 }

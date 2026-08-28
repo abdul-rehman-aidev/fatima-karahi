@@ -9,6 +9,16 @@ import { TrustBand } from "@/components/sections/TrustBand";
 import { FAQSection } from "@/components/sections/FAQSection";
 
 export const metadata: Metadata = {
+  // SEO audit High #7 — the previous default title (from layout.tsx's
+  // `${site.name}: ${site.tagline}`) omitted both "Edmonton" and "halal",
+  // the two terms every competitor checked leads with and the ones most
+  // likely to be lifted as the canonical entity title by an AI engine.
+  // Overriding explicitly here rather than editing the tagline, since that
+  // string is also the hero's H1 supporting line and reads fine as-is there.
+  // `absolute` bypasses layout.tsx's `%s · Fatima Karahi` template — this
+  // string already carries the brand name, so the template would otherwise
+  // double it up ("...in Edmonton · Fatima Karahi").
+  title: { absolute: "Fatima Karahi: Halal Pakistani Restaurant in Edmonton" },
   alternates: { canonical: "/" },
 };
 

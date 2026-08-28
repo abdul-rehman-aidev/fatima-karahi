@@ -11,7 +11,7 @@
 
 export const FORM_ENDPOINT: string = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "";
 
-export type FormKind = "catering-quote" | "contact" | "reservation";
+export type FormKind = "catering-quote" | "contact" | "query";
 
 export type FormResult = { ok: true; simulated: boolean };
 

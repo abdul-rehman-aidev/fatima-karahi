@@ -43,7 +43,11 @@ const base =
 const sizes = {
   lg: "px-s6 py-s4 text-[1.0625rem]",
   md: "px-[26px] py-[13px] text-[0.9375rem]",
-  sm: "px-[18px] py-[9px] text-[0.8125rem]",
+  // py bumped 9px → 14px (SEO audit Low #6): at leading-none/13px text, the
+  // old padding measured ~31px total height, under the 44px touch-target
+  // guidance on mobile CTAs. 14px padding clears it (~44px) without a
+  // visible size jump, since sm buttons already sit inline with small text.
+  sm: "px-[18px] py-[14px] text-[0.8125rem]",
 };
 
 const variants = {

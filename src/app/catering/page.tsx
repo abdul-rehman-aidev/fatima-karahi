@@ -17,11 +17,14 @@ import {
   occasions,
 } from "@/data/catering";
 import { site } from "@/data/site";
+import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Catering: bring Lahore to your event",
+  // SEO audit High #7 — this title also omitted "Edmonton" (flagged
+  // alongside the homepage's).
+  title: "Catering: Pakistani daawats & events in Edmonton",
   description:
-    "Lahori catering in Edmonton: corporate lunches, walima, mehndi, daawats and community events. Slow-cooked karahi and charcoal BBQ, delivered and set up. Request a quote in two minutes.",
+    "Pakistani catering in Edmonton: corporate lunches, walima, mehndi, daawats and community events. Slow-cooked karahi and charcoal BBQ, delivered and set up. Request a quote in two minutes.",
   alternates: { canonical: "/catering" },
 };
 
@@ -89,7 +92,7 @@ export default function CateringPage() {
               دعوت
             </p>
             <h1 className="m-0 font-display text-display-l font-normal text-ivory">
-              Bring Lahore to your event
+              Bring Pakistan to your event
             </h1>
             <p className="mt-s4 max-w-[44ch] text-body-l text-ivory">
               Slow-cooked karahi and charcoal BBQ, delivered and set up, from boardroom lunches
@@ -113,7 +116,7 @@ export default function CateringPage() {
           <Reveal>
             <Eyebrow>Occasions</Eyebrow>
             <h2 className="mb-s7 mt-s4 font-display text-display-l font-normal text-ivory">
-              We cater the way Lahore gathers
+              We cater the way Pakistan gathers
             </h2>
           </Reveal>
           <OccasionsCarousel occasions={occasions} />
@@ -179,8 +182,9 @@ export default function CateringPage() {
             <QuoteForm />
           </Reveal>
           <ul className="mt-s6 flex flex-wrap items-center justify-center gap-x-s5 gap-y-s2 text-eyebrow font-semibold uppercase tracking-[0.06em] text-stone">
-            <li className="flex items-center">
+            <li className="flex items-center gap-s2">
               <HalalBadge size={28} />
+              100% Halal-Certified
             </li>
             <li aria-hidden="true">·</li>
             <li>Serving Edmonton &amp; area</li>
@@ -189,6 +193,7 @@ export default function CateringPage() {
           </ul>
         </div>
       </section>
+      <BreadcrumbJsonLd name="Catering" path="/catering/" />
     </>
   );
 }

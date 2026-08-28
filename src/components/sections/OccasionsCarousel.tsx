@@ -3,43 +3,29 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { OccasionCard } from "@/components/ds/OccasionCard";
 import { Reveal } from "@/components/motion/Reveal";
-import { useMediaQuery } from "@/lib/useMediaQuery";
 import { cx } from "@/lib/cx";
 import type { Occasion } from "@/data/catering";
 
 /**
- * Catering page's "Occasions" showcase. 5 cards in a 3-column grid left a
- * lopsided 3-then-2 last row on desktop, so desktop (≥1024px) becomes a
- * snap-scroll rail with dots instead — same scroll-tracking mechanics as
- * SpecialsCarousel's "Must Try" rail. Mobile/tablet are untouched: still the
- * plain stacked/2-up grid, which reads fine at those widths and needs no
- * carousel JS.
+ * Catering page's "Occasions" showcase — a snap-scroll rail at every
+ * breakpoint (same mechanics as SpecialsCarousel's "Must Try" rail): mobile
+ * gets a single peeking card driven by swipe, sm widens to a two-up peek,
+ * and lg locks to an exact 3-up row with prev/next arrows layered on top.
+ * One structure for all sizes — card width is just a responsive Tailwind
+ * class — so there's no JS media-query branch and no flash of the wrong
+ * layout on first paint (the bug that bit CateringGallery's desktop/mobile
+ * split under static export).
  */
 export function OccasionsCarousel({ occasions }: { occasions: Occasion[] }) {
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-  return isDesktop ? <DesktopCarousel occasions={occasions} /> : <MobileGrid occasions={occasions} />;
-}
-
-function MobileGrid({ occasions }: { occasions: Occasion[] }) {
-  return (
-    <div className="grid grid-cols-1 gap-s4 sm:grid-cols-2">
-      {occasions.map((o, i) => (
-        <Reveal key={o.id} delay={i * 60}>
-          <OccasionCard name={o.name} urdu={o.urdu} image={o.image} alt={o.name} height="lg" />
-          <p className="mt-s3 max-w-[38ch] text-[0.9rem] leading-[1.6] text-sage">{o.line}</p>
-        </Reveal>
-      ))}
-    </div>
-  );
-}
-
-function DesktopCarousel({ occasions }: { occasions: Occasion[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const updateActive = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
+    // The dot (and the arrows' disabled state) should track whichever card
+    // is snapped to the leading (left) edge — "nearest to centre" ties
+    // whenever more than one card is simultaneously visible.
     const cards = Array.from(el.children) as HTMLElement[];
     let leading = 0;
     cards.forEach((card, i) => {
@@ -86,7 +72,7 @@ function DesktopCarousel({ occasions }: { occasions: Occasion[] }) {
               role="group"
               aria-roledescription="slide"
               aria-label={`${i + 1} of ${occasions.length}`}
-              className="w-[calc((100%-2*var(--s-4))/3)] shrink-0 snap-start"
+              className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[calc((100%-2*var(--s-4))/3)]"
             >
               <OccasionCard name={o.name} urdu={o.urdu} image={o.image} alt={o.name} height="lg" />
               <p className="mt-s3 max-w-[38ch] text-[0.9rem] leading-[1.6] text-sage">{o.line}</p>
@@ -94,6 +80,8 @@ function DesktopCarousel({ occasions }: { occasions: Occasion[] }) {
           ))}
         </div>
 
+        {/* Arrows are a desktop affordance only — below lg the rail is
+            swipe-driven (touch), same as every other rail on the site. */}
         <ArrowButton
           direction="prev"
           disabled={atStart}
@@ -130,8 +118,10 @@ function DesktopCarousel({ occasions }: { occasions: Occasion[] }) {
 
 /**
  * Sits over the card photos, vertically centred on the image itself (a
- * constant 340px tall here — OccasionCard's `height="lg"` sm: size, and this
- * component only ever mounts at ≥1024px so that breakpoint always applies).
+ * constant 340px tall — OccasionCard's `height="lg"` sm: size, which is
+ * already in effect everywhere these arrows can appear: `hidden lg:grid`
+ * keeps them out of the DOM's visible flow below the `lg` breakpoint, and
+ * `lg` is well past the `sm` breakpoint where the 340px height kicks in).
  * Same "icon floating over photography" treatment as CateringGallery's
  * expand button: translucent dark fill + ivory hairline at rest, solid gold
  * on hover, so it reads over any photo regardless of brightness.
@@ -154,7 +144,7 @@ function ArrowButton({
       disabled={disabled}
       aria-label={direction === "prev" ? "Previous occasion" : "Next occasion"}
       className={cx(
-        "absolute top-[170px] z-[1] grid h-[42px] w-[42px] -translate-y-1/2 cursor-pointer place-items-center rounded-pill border-[1.5px] border-[color-mix(in_srgb,var(--ivory)_55%,transparent)] bg-[color-mix(in_srgb,var(--emerald-deep)_55%,transparent)] text-ivory backdrop-blur-[2px] transition-[transform,border-color,color,background-color,opacity] duration-[var(--dur)] ease-[var(--ease-soft)] hover:border-transparent hover:bg-gold hover:text-ink hover:shadow-glow-gold hover:scale-[var(--hover-scale)] active:scale-[var(--press-scale)] disabled:cursor-not-allowed disabled:opacity-60",
+        "absolute top-[170px] z-[1] hidden h-[42px] w-[42px] -translate-y-1/2 cursor-pointer place-items-center rounded-pill border-[1.5px] border-[color-mix(in_srgb,var(--ivory)_55%,transparent)] bg-[color-mix(in_srgb,var(--emerald-deep)_55%,transparent)] text-ivory backdrop-blur-[2px] transition-[transform,border-color,color,background-color,opacity] duration-[var(--dur)] ease-[var(--ease-soft)] hover:border-transparent hover:bg-gold hover:text-ink hover:shadow-glow-gold hover:scale-[var(--hover-scale)] active:scale-[var(--press-scale)] disabled:cursor-not-allowed disabled:opacity-60 lg:grid",
         className,
       )}
     >

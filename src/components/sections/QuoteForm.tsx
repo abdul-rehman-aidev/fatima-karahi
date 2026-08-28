@@ -26,9 +26,14 @@ import { cx } from "@/lib/cx";
 
 const STEPS = ["Service", "Event type", "Guest count", "Date", "Your details"] as const;
 
+const MIN_GUESTS = 25;
+const MAX_GUESTS = 2500;
+
 type Values = {
   service: string;
   occasion: string;
+  /** free-text detail when occasion === "Other" — optional, never validated */
+  occasionOther: string;
   guests: string;
   date: string;
   name: string;
@@ -39,6 +44,7 @@ type Values = {
 const EMPTY: Values = {
   service: "",
   occasion: "",
+  occasionOther: "",
   guests: "",
   date: "",
   name: "",
@@ -70,11 +76,16 @@ export function QuoteForm() {
     if (s === 2) {
       const n = Number(values.guests);
       if (!values.guests.trim()) next.guests = "A rough guest count helps us quote accurately.";
-      else if (!Number.isFinite(n) || n < 1) next.guests = "Please enter a number of guests.";
+      else if (!Number.isFinite(n)) next.guests = "Please enter a number of guests.";
+      else if (n < MIN_GUESTS)
+        next.guests = `We cater from ${MIN_GUESTS} guests up — for anything smaller, give us a call.`;
+      else if (n > MAX_GUESTS)
+        next.guests = `We cater up to ${MAX_GUESTS.toLocaleString()} guests — for anything larger, please call us directly.`;
     }
     if (s === 3) {
-      if (!values.date) next.date = "Pick your event date; an approximate date is fine.";
-      else if (values.date < new Date().toISOString().slice(0, 10))
+      // Optional — an event date isn't required to request a quote, so the
+      // only thing worth validating is a date that's already in the past.
+      if (values.date && values.date < new Date().toISOString().slice(0, 10))
         next.date = "That date has passed; pick an upcoming one.";
     }
     if (s === 4) {
@@ -107,6 +118,7 @@ export function QuoteForm() {
       await submitForm("catering-quote", {
         service: values.service,
         occasion: values.occasion,
+        occasionOther: values.occasionOther,
         guests: values.guests,
         date: values.date,
         name: values.name,
@@ -120,6 +132,13 @@ export function QuoteForm() {
   };
 
   if (status === "success") {
+    // "Other" reads oddly on its own ("...for your other.") — swap in
+    // whatever the visitor typed, if anything, and fall back to "event"
+    // rather than the raw category name.
+    const occasionLabel =
+      values.occasion === "Other"
+        ? values.occasionOther.trim() || "event"
+        : values.occasion || "event";
     return (
       <div className="rounded-card bg-emerald p-[clamp(28px,5vw,48px)] text-center shadow-card">
         <Divider width={120} className="mb-s4" />
@@ -132,7 +151,7 @@ export function QuoteForm() {
         </h3>
         <p className="mb-s5 mt-s3 text-sage">
           We&rsquo;ll reply within 4 hours with a tailored Lahori menu for your{" "}
-          {values.occasion ? values.occasion.toLowerCase() : "event"}.
+          {occasionLabel.toLowerCase()}.
         </p>
         <Button
           variant="outline"
@@ -266,6 +285,16 @@ export function QuoteForm() {
                 {errors.occasion}
               </p>
             )}
+            {values.occasion === "Other" && (
+              <Field
+                id="occasionOther"
+                label="What kind of event? (optional)"
+                placeholder="e.g. graduation, retirement, anniversary…"
+                className="mt-s4"
+                value={values.occasionOther}
+                onChange={(e) => set("occasionOther", e.target.value)}
+              />
+            )}
           </fieldset>
         )}
 
@@ -279,7 +308,7 @@ export function QuoteForm() {
               label="Roughly how many guests?"
               placeholder="e.g. 120"
               inputMode="numeric"
-              hint="An estimate is perfectly fine."
+              hint="An estimate is fine — we cater anywhere from 25 to 2,500 guests."
               required
               value={values.guests}
               onChange={(e) => set("guests", e.target.value)}
@@ -295,9 +324,9 @@ export function QuoteForm() {
             </h3>
             <Field
               id="date"
-              label="When is your event?"
+              label="When is your event? (optional)"
               type="date"
-              required
+              hint="Don't have a date yet? Leave it blank and continue."
               min={new Date().toISOString().slice(0, 10)}
               value={values.date}
               onChange={(e) => set("date", e.target.value)}

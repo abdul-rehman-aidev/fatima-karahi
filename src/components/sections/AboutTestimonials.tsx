@@ -13,7 +13,10 @@ import { site } from "@/data/site";
  */
 export function AboutTestimonials() {
   const reviews = site.reviews;
-  const { active, fading, setPaused, goTo } = useReviewCarousel(reviews.length);
+  // startIndex=1 (SEO audit Medium #7) — see useReviewCarousel's comment;
+  // keeps this page's statically-rendered testimonial different from the
+  // homepage's, which starts at 0.
+  const { active, fading, setPaused, goTo } = useReviewCarousel(reviews.length, 1);
   const review = reviews[active];
   const prevIndex = (active - 1 + reviews.length) % reviews.length;
   const nextIndex = (active + 1) % reviews.length;

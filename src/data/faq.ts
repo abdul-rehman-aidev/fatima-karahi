@@ -44,9 +44,10 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         // NEEDS OWNER CONFIRMATION — group/private-event booking policy isn't published anywhere public.
+        // SEO audit High #8: softened from a confident "Yes" to "call ahead to confirm" — the
+        // policy itself is still unverified, only the wording changed.
         question: "Do you take reservations for large groups or private events?",
-        answer:
-          "Yes, we welcome group bookings and reservations for large parties. Contact us in advance so our team can prepare seating, service, and even catering for your group, whether it's a family gathering, birthday, or private event.",
+        answer: `We're happy to accommodate group bookings and larger parties when we can. Call us at ${site.phone} ahead of your visit so our team can confirm availability and prepare seating, service, or catering for your group.`,
         needsConfirmation: true,
       },
       {
@@ -87,9 +88,11 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         // NEEDS OWNER CONFIRMATION — kitchen's actual spice-adjustment policy isn't published anywhere public.
+        // SEO audit High #8: softened from "Yes" to "let your server know and ask" — the kitchen's
+        // actual policy is still unverified, only the wording changed.
         question: "Can you accommodate spice-level preferences?",
         answer:
-          "Yes, most dishes can be adjusted for spice level on request. Whether you prefer mild, medium, or traditional Lahori-level heat, let your server know when ordering so we can prepare your karahi or curry exactly the way you like it.",
+          "Let your server know your spice preference when ordering — mild, medium, or traditional Lahori-level heat — and ask what's possible for your dish. Most of our karahi and curry recipes can be adjusted on request.",
         needsConfirmation: true,
       },
       {
@@ -110,11 +113,15 @@ export const faqCategories: FaqCategory[] = [
     description: "Catering, ordering, and everything else.",
     questions: [
       {
-        // NEEDS OWNER CONFIRMATION — off-site/private-event catering isn't published anywhere public.
+        // Un-flagged during the SEO audit fix pass: data/catering.ts already states this
+        // confidently and in detail (an "Outside" service option with full staffed setup "from
+        // a boardroom to a wedding hall," plus dedicated Walima/Mehndi/Corporate packages) —
+        // hedging just this FAQ answer would contradict the rest of the site rather than
+        // reflect real uncertainty, so the confident wording is kept and needsConfirmation
+        // dropped in favour of matching the catering page.
         question: "Do you cater outside the restaurant for events like weddings or private parties?",
         answer:
           "Yes, catering is available for private events such as weddings, birthdays, and corporate gatherings. Reach out with your event details, including guest count and date, and our team will put together a halal Pakistani catering menu and quote for you.",
-        needsConfirmation: true,
       },
       {
         question: "Can I place an order online?",
@@ -123,9 +130,10 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         // NEEDS OWNER CONFIRMATION — parking situation varies by location and isn't published anywhere public.
+        // SEO audit High #8: softened from a flat "Parking is available" to "call ahead to
+        // confirm" — actual on-site parking is still unverified, only the wording changed.
         question: "Is parking available at the restaurant?",
-        answer:
-          "Parking is available on-site, making it convenient to stop in for dine-in, takeout, or catering pickup. Please check with your local Fatima Karahi location in Edmonton or Calgary for specific parking details.",
+        answer: `Parking details can vary by location, so it's worth calling ahead — ${site.phone} — to confirm what's available before you visit for dine-in, takeout, or catering pickup.`,
         needsConfirmation: true,
       },
       {
@@ -141,9 +149,11 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         // NEEDS OWNER CONFIRMATION — gift card availability isn't published anywhere public.
+        // SEO audit High #8: softened the flat "not currently available online" claim — gift
+        // card availability generally is still unverified, only the wording changed.
         question: "Do you offer gift cards?",
         answer:
-          "Gift cards are not currently available online. Ask in-restaurant if you'd like to purchase one for a friend or family member who loves Pakistani food, karahi, and charcoal BBQ as much as you do.",
+          "Gift cards aren't set up for online purchase yet — ask in-restaurant to check current availability if you'd like one for a friend or family member who loves Pakistani food, karahi, and charcoal BBQ as much as you do.",
         needsConfirmation: true,
       },
     ],

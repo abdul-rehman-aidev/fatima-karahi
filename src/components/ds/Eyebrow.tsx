@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
 /**
- * Eyebrow — the tracked-caps section kicker ("From Lahore to Edmonton").
+ * Eyebrow — the tracked-caps section kicker ("From Pakistan to Edmonton").
  * Gold by default; sage over busy imagery; stone on light zones.
  */
 const tones = {

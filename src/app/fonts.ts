@@ -59,7 +59,16 @@ export const gulzar = localFont({
   src: [{ path: "../fonts/gulzar-arabic-400.woff2", weight: "400", style: "normal" }],
   variable: "--font-gulzar",
   display: "swap",
-  preload: true,
+  // SEO audit High #6 (mobile LCP/TTI): this is by far the heaviest font
+  // file (208KB — an Arabic/Nastaliq shaping font, inherently larger than a
+  // latin subset) but it was preloaded site-wide even though it only ever
+  // renders a few decorative Urdu words in the nav/footer/logotype, never
+  // above-the-fold LCP content. Preloading it competed with the fonts and
+  // images that actually gate first paint on every single page load.
+  // `display: "swap"` already means the RTL accents just show slightly
+  // later without it — no layout shift, since those spans aren't sized
+  // against a fallback metric.
+  preload: false,
   fallback: ["Noto Nastaliq Urdu", "serif"],
   adjustFontFallback: false,
 });

@@ -21,7 +21,7 @@ export function CateringSpotlight() {
         <Reveal className="mb-s7 max-w-[560px]">
           <Eyebrow tone="stone">Cater your daawat</Eyebrow>
           <h2 className="mb-s4 mt-s4 font-display text-display-l font-normal text-ink">
-            Bring Lahore to your table
+            Bring Pakistan to your table
           </h2>
           <p className="text-body-l text-stone">
             From corporate lunches to walima feasts, slow-cooked, delivered and set up.{" "}

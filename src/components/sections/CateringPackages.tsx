@@ -64,12 +64,18 @@ export function CateringPackages({ packages }: { packages: CateringPackage[] }) 
             cards that narrow. The item <ul> already carries flex-1, so any
             extra height within a row lands as breathing room above the
             button, keeping both cards in a row's CTA aligned. */}
+        {/* 5 packages + this help card = 6 — still an even 3+3 across two
+            rows at lg, so the card doesn't leave an orphaned single-card
+            row the way a bare 5-up grid would. */}
         <div className="grid grid-cols-1 gap-s6 sm:grid-cols-2 lg:grid-cols-3">
           {packages.map((pkg, i) => (
             <Reveal key={pkg.id} delay={i * 60}>
               <PackageCard pkg={pkg} tier={i} />
             </Reveal>
           ))}
+          <Reveal delay={packages.length * 60}>
+            <HelpCard />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -112,6 +118,41 @@ function PackageCard({ pkg, tier }: { pkg: CateringPackage; tier: number }) {
 
       <Button variant="secondary" href="/catering#quote" className="mt-s6 w-full justify-center">
         Request this package
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * Sixth card, same shell as PackageCard (bg-cream, shadow-card, the
+ * lightest tier border) but no price or item list — a catch-all for
+ * anyone who scrolled the whole ladder and still isn't sure, or wants
+ * something none of the five set menus quite cover.
+ */
+function HelpCard() {
+  return (
+    <div className={cx("flex h-full flex-col rounded-card bg-cream p-s6 shadow-card", TIER_BORDER[0])}>
+      <h3 className="m-0 font-display text-[1.4rem] leading-[1.1] text-ink">Not sure what fits?</h3>
+
+      <Divider tone="line" width={56} className="my-s5" />
+
+      <p className="m-0 flex-1 font-body text-[0.9rem] leading-[1.6] text-stone">
+        Don&rsquo;t see quite what you&rsquo;re after, or not sure which package is right for your
+        event? Tell us what you have in mind and we&rsquo;ll help you sort it out — and make sure
+        it&rsquo;s the best event of your life.
+      </p>
+
+      <Button variant="secondary" href="#quote" className="mt-s6 w-full justify-center">
+        Talk to us
+      </Button>
+      <Button
+        variant="ghost-light"
+        size="sm"
+        href={site.phoneHref}
+        external
+        className="mt-s3 w-full justify-center"
+      >
+        Call {site.phone}
       </Button>
     </div>
   );

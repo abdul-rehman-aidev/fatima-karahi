@@ -28,8 +28,8 @@ export function SiteFooter() {
           <div>
             <Logotype />
             <p className="mt-[18px] max-w-[34ch] text-[0.95rem] leading-[1.6] text-sage">
-              The taste of Lahore, now in Edmonton: slow-cooked karahi, charcoal BBQ, and the
-              warmth of a Lahori <i lang="ur-Latn">dastarkhwan</i>.
+              The taste of Pakistan, now in Edmonton: slow-cooked karahi, charcoal BBQ, and the
+              warmth of a Pakistani <i lang="ur-Latn">dastarkhwan</i>.
             </p>
             {socials.length > 0 && (
               <ul className="mt-s5 flex gap-s5">
@@ -91,7 +91,7 @@ export function SiteFooter() {
 
         <div className="mt-s7 flex flex-wrap justify-between gap-s3 border-t-[0.5px] border-emerald-line pt-s5 text-eyebrow text-sage">
           <span className="flex items-center gap-s2">
-            <HalalBadge size={35} /> · Family-owned · Authentic Lahori recipes
+            <HalalBadge size={35} /> 100% Halal-Certified · Family-owned · Authentic Pakistani recipes
           </span>
           <span>
             © {year} {site.name} · <span lang="ur" dir="rtl">{site.nameUrdu}</span>

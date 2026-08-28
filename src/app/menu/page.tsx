@@ -5,14 +5,14 @@ import { Picture } from "@/components/media/Picture";
 import { Reveal } from "@/components/motion/Reveal";
 import { MenuCategoryNav } from "@/components/sections/MenuCategoryNav";
 import { MenuSection } from "@/components/sections/MenuSection";
-import { MenuJsonLd } from "@/components/chrome/JsonLd";
+import { BreadcrumbJsonLd, MenuJsonLd } from "@/components/chrome/JsonLd";
 import { menu } from "@/data/menu";
 import { hasOrderUrl, site } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Menu: Lahori karahi, charcoal BBQ, nihari",
+  title: "Menu: Pakistani karahi, charcoal BBQ, nihari",
   description:
-    "The full Fatima Karahi menu: cast-iron karahi, charcoal BBQ, nihari, fresh tandoor breads and Lahori desserts. Halal, cooked slow, served generous in Edmonton.",
+    "The full Fatima Karahi menu: cast-iron karahi, charcoal BBQ, nihari, fresh tandoor breads and Pakistani desserts. Halal, cooked slow, served generous in Edmonton.",
   alternates: { canonical: "/menu" },
 };
 
@@ -105,6 +105,7 @@ export default function MenuPage() {
       </div>
 
       <MenuJsonLd />
+      <BreadcrumbJsonLd name="Menu" path="/menu/" />
     </>
   );
 }

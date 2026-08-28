@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: site.name,
     locale: "en_CA",
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: `${site.name}, Lahori restaurant in Edmonton` }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: `${site.name}, Pakistani restaurant in Edmonton` }],
   },
   twitter: {
     card: "summary_large_image",

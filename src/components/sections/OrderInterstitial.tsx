@@ -40,8 +40,12 @@ export function OrderInterstitial() {
           آرڈر کریں
         </p>
         <h1 className="m-0 font-display text-display-l font-normal text-ivory">Order online</h1>
-        <p className="mx-auto mb-s6 mt-s4 max-w-[40ch] text-body-l text-sage">
-          Hot karahi and charcoal BBQ, straight to your door across Edmonton.
+        <p className="mx-auto mb-s3 mt-s4 max-w-[46ch] text-body-l text-sage">
+          Hot karahi, charcoal BBQ, and biryani, straight to your door across Edmonton.
+        </p>
+        <p className="mx-auto mb-s6 max-w-[48ch] text-body text-sage">
+          Every dish on our halal Pakistani menu — karahi, kebabs, tandoor bread, and more — is
+          available for delivery or pickup, including through Uber Eats and DoorDash.
         </p>
 
         {ready ? (

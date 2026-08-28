@@ -100,39 +100,49 @@ function FAQRow({
 
   return (
     <div>
-      <button
-        type="button"
-        id={triggerId}
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full cursor-pointer items-center justify-between gap-s4 py-[20px] text-left outline-none focus-visible:[outline:1.5px_solid_var(--focus-ring)] focus-visible:[outline-offset:-2px]"
-      >
-        <span
-          className={cx(
-            "font-body text-[1.0625rem] font-medium leading-[1.4]",
-            dark ? "text-ivory" : "text-ink",
-          )}
+      {/* SEO audit High #1: this was a <span> inside the button — not a
+          real heading anywhere in the DOM despite being genuine Q&A content.
+          The <h3> wraps the trigger button itself (the standard accessible
+          accordion pattern) rather than sitting beside it, so the question
+          text is both the heading and the interactive control. (FAQPage
+          JSON-LD is intentionally not added here — Google retired FAQ rich
+          results for all sites on 2026-05-07, so there's no SERP benefit to
+          claim; this fix is for real content structure, not schema.) */}
+      <h3 className="m-0">
+        <button
+          type="button"
+          id={triggerId}
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((v) => !v)}
+          className="flex w-full cursor-pointer items-center justify-between gap-s4 py-[20px] text-left outline-none focus-visible:[outline:1.5px_solid_var(--focus-ring)] focus-visible:[outline-offset:-2px]"
         >
-          {question}
-        </span>
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          aria-hidden="true"
-          className={cx(
-            "shrink-0 text-gold transition-transform duration-[var(--dur)] ease-[var(--ease-soft)]",
-            open && "rotate-45",
-          )}
-        >
-          <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
-        </svg>
-      </button>
+          <span
+            className={cx(
+              "font-body text-[1.0625rem] font-medium leading-[1.4]",
+              dark ? "text-ivory" : "text-ink",
+            )}
+          >
+            {question}
+          </span>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden="true"
+            className={cx(
+              "shrink-0 text-gold transition-transform duration-[var(--dur)] ease-[var(--ease-soft)]",
+              open && "rotate-45",
+            )}
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      </h3>
 
       <div
         id={panelId}

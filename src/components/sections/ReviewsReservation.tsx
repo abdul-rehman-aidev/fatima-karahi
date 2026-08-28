@@ -2,7 +2,7 @@
 
 import { Divider } from "@/components/ds/Divider";
 import { Picture } from "@/components/media/Picture";
-import { ReservationForm } from "@/components/sections/ReservationForm";
+import { QueryForm } from "@/components/sections/QueryForm";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { useReviewCarousel } from "@/lib/useReviewCarousel";
 import { cx } from "@/lib/cx";
@@ -10,7 +10,7 @@ import { site } from "@/data/site";
 
 /**
  * Replaces TrustBand's old single testimonial block. Two genuinely different
- * structures per breakpoint — desktop overlaps the reservation/contact card
+ * structures per breakpoint — desktop overlaps the query/contact card
  * over the photo's bottom edge (negative margin pulling a later sibling up
  * into the preceding section), mobile ends the photo cleanly after the
  * carousel and stacks the card content below on the page's normal
@@ -65,7 +65,7 @@ function DesktopLayout() {
       </section>
       <div className="relative z-[2] mx-auto -mt-[180px] max-w-content px-[clamp(20px,5vw,56px)] pb-[clamp(3rem,6vw,4rem)]">
         <div className="grid overflow-hidden rounded-card bg-sage-tag shadow-lift lg:grid-cols-2">
-          <ReservationForm variant="dark" bare className="p-[clamp(28px,4vw,48px)]" />
+          <QueryForm variant="dark" bare className="p-[clamp(28px,4vw,48px)]" />
           <ContactColumn className="border-t border-[color-mix(in_srgb,var(--ivory)_14%,transparent)] p-[clamp(28px,4vw,48px)] lg:border-l lg:border-t-0" />
         </div>
       </div>
@@ -84,13 +84,38 @@ function MobileLayout() {
       </section>
       <div className="bg-ivory py-section">
         <div className="mx-auto flex max-w-content flex-col gap-s5 px-[clamp(20px,5vw,56px)]">
-          <ReservationForm variant="dark" />
+          <QueryForm variant="dark" />
           <div className="rounded-card bg-sage-tag p-[clamp(20px,5vw,36px)] shadow-card">
             <ContactColumn />
           </div>
         </div>
       </div>
     </>
+  );
+}
+
+/** Five stars, filled left-to-right to the exact rating fraction (e.g. 4.4/5 → 88%). */
+function StarRating({ value }: { value: number }) {
+  const pct = Math.max(0, Math.min(100, (value / 5) * 100));
+  return (
+    <span className="relative inline-flex" aria-hidden="true">
+      <StarRow className="text-[color-mix(in_srgb,var(--sage)_50%,transparent)]" />
+      <span className="absolute inset-0 overflow-hidden" style={{ width: `${pct}%` }}>
+        <StarRow className="text-gold-bright" />
+      </span>
+    </span>
+  );
+}
+
+function StarRow({ className }: { className: string }) {
+  return (
+    <span className={cx("flex gap-[2px]", className)}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="shrink-0">
+          <path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.9-6.2 3.9 1.6-7L2 9.7l7.1-.6L12 2.5Z" />
+        </svg>
+      ))}
+    </span>
   );
 }
 
@@ -108,7 +133,7 @@ function TestimonialCarousel() {
   // The three reviews are noticeably different lengths (review 1 wraps to
   // 4 lines, the others to ~3), so swapping the quote in place instantly
   // both reflows the section's height (the reported "vibration") and, on
-  // desktop, shifts where the avatar row lands relative to the reservation
+  // desktop, shifts where the avatar row lands relative to the query
   // card's fixed -mt overlap offset below — sometimes clipping the avatars
   // under the card's top edge. Fixed by (1) reserving a fixed-height box
   // for the quote sized for the longest one, so the section's height never
@@ -124,6 +149,16 @@ function TestimonialCarousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {/* SEO audit High #3: schema now carries a real AggregateRating (see
+          JsonLd.tsx), but a rich-result number with nothing matching on the
+          page itself is the kind of mismatch Google's guidelines flag —
+          this makes the same real figure visible to readers, right where
+          the reviews it's built from already live. */}
+      <div className="mb-s4 flex items-center justify-center gap-s2 text-eyebrow font-semibold uppercase tracking-[0.1em] text-gold-bright">
+        <StarRating value={site.rating.value} />
+        {site.rating.value.toFixed(1)}★ · {site.rating.count.toLocaleString()}+ Google reviews
+      </div>
+
       <div className="flex min-h-[clamp(140px,20vw,215px)] flex-col justify-center">
         <blockquote
           className={cx(

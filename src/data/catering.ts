@@ -44,47 +44,78 @@ export const occasions: Occasion[] = [
   {
     id: "corporate",
     name: "Corporate Lunch",
-    image: "food-bbq",
+    image: "occasion-corporate-lunch",
     line: "Boardroom-ready trays, on time, with plates and serving ware handled.",
   },
   {
     id: "walima",
     name: "Walima",
     urdu: "ولیمہ",
-    image: "catering",
+    image: "occasion-walima",
     line: "The full wedding spread, laid beautifully and served generously.",
   },
   {
     id: "mehndi",
     name: "Mehndi",
     urdu: "مہندی",
-    image: "food-spread",
+    image: "occasion-mehndi",
     line: "Colourful, casual, BBQ-forward: food that keeps the dholki going.",
   },
   {
     id: "daawat",
     name: "Birthday / Daawat",
     urdu: "دعوت",
-    image: "food-karahi",
+    image: "occasion-daawat",
     line: "Home-style karahi and biryani for the gatherings that matter.",
   },
   {
     id: "community",
     name: "Community & Mosque",
-    image: "food-nihari",
+    image: "occasion-community-mosque",
     line: "Volume-friendly menus for iftars, jummah lunches and fundraisers.",
+  },
+  // Added 2026-08-26 per client request; launched on placeholder photos
+  // reusing the existing pool. Dedicated photography supplied 2026-08-27
+  // (see assets-src/occasion-*.jpeg) and wired in below.
+  {
+    id: "dinner-party",
+    name: "Dinner Party",
+    image: "occasion-dinner-party",
+    line: "An intimate table, plated the way a home dinner deserves.",
+  },
+  {
+    id: "birthday-party",
+    name: "Birthday Party",
+    image: "occasion-birthday-party",
+    line: "Karahi, BBQ, and dessert for a celebration worth remembering.",
+  },
+  {
+    id: "anniversary",
+    name: "Anniversary Party",
+    image: "occasion-anniversary",
+    line: "A milestone spread, laid with a little extra care.",
+  },
+  {
+    id: "corporate-events",
+    name: "Corporate Events",
+    image: "occasion-corporate-events",
+    line: "From boardroom lunches to full office parties, handled start to finish.",
   },
 ];
 
 /**
- * Catering packages — sourced from the client-supplied PDF ("Fatima Karahi
- * by Hamza"), which lists Basic $35, Silver $40, Premium $45, Golden $50,
- * and Ultimate $55 per person. Site prices below are each $5/person less
- * than the PDF, per the client's explicit instruction. Item lists match the
- * PDF exactly, one item per line — lines the PDF grouped together (e.g.
- * "Naan - Salad - Raita") are split into separate items here rather than
- * collapsed, and "X or Y" choices are kept as a single line since that's a
- * real either/or choice, not two separate items.
+ * Catering packages — originally sourced from the client-supplied PDF
+ * ("Fatima Karahi by Hamza"), which lists Basic $35, Silver $40, Premium
+ * $45, Golden $50, and Ultimate $55 per person. Site prices below are each
+ * $5/person less than the PDF, per the client's explicit instruction. Item
+ * lists matched the PDF exactly at first, one item per line — lines the PDF
+ * grouped together (e.g. "Naan - Salad - Raita") were split into separate
+ * items here rather than collapsed, and "X or Y" choices are kept as a
+ * single line since that's a real either/or choice, not two separate items.
+ *
+ * Basic/Silver/Premium/Ultimate have since been revised per the client's
+ * direct request (2026-08-26) — Golden is untouched and still matches the
+ * PDF as-is.
  */
 export type CateringPackage = {
   id: string;
@@ -104,12 +135,13 @@ export const cateringPackages: CateringPackage[] = [
       "Chicken Tikka With Bone",
       "Chicken Karahi",
       "Chana Masala",
-      "Veg Pulao",
+      "Pulao Rice",
       "Naan",
       "Kheer",
       "Raita",
       "Salad",
       "2 Liter Pop",
+      "Chai",
     ],
   },
   {
@@ -121,7 +153,7 @@ export const cateringPackages: CateringPackage[] = [
       "Beef Kabab",
       "Chicken Karahi",
       "Chana Masala",
-      "Zeera Rice or Plain Rice",
+      "Pulao Rice",
       "Chicken Chowmein",
       "Khoya Kheer",
       "Naan",
@@ -140,7 +172,7 @@ export const cateringPackages: CateringPackage[] = [
       "Fish Pokora",
       "Chicken Tikka With Bone",
       "Beef Kabab",
-      "Mutton Karahi",
+      "Lamb/Goat Karahi",
       "Goat Pulao or Chicken Pulao",
       "Chana Masala or Palak Paneer",
       "Chicken Chowmein",
@@ -187,9 +219,10 @@ export const cateringPackages: CateringPackage[] = [
       "Gol Gappay",
       "Butter Chicken",
       "Chicken Tikka With Bone",
-      "Chicken Kabab",
+      "Beef Kabab or Chicken Kabab",
       "Goat Pulao or Chicken Pulao",
-      "Goat Karahi",
+      "Goat, Lamb, or Chicken Karahi",
+      "Beef Nihari",
       "Chana Masala or Palak Paneer",
       "Chicken Chowmein",
       "Naan",
@@ -212,7 +245,7 @@ export const howItWorks = [
   {
     n: "02",
     title: "We build your menu",
-    line: "A Lahori spread tuned to your taste and budget; we reply within 4 hours.",
+    line: "A Pakistani spread tuned to your taste and budget; we reply within 4 hours.",
   },
   {
     n: "03",
@@ -222,7 +255,7 @@ export const howItWorks = [
 ];
 
 /** Quote-form occasion choices (step 1 pills) */
-export const quoteOccasions = ["Corporate", "Walima", "Mehndi", "Daawat", "Community"] as const;
+export const quoteOccasions = ["Corporate", "Walima", "Mehndi", "Daawat", "Community", "Other"] as const;
 
 export type GalleryTile = {
   id: string;
@@ -283,7 +316,7 @@ export const galleryTiles: GalleryTile[] = [
     image: "catering",
     alt: "A full daawat spread laid for a catering event",
     heading: "The Daawat Table",
-    body: "A full spread laid the way Lahore gathers: rice, curry, bread and dessert, together.",
+    body: "A full spread laid the way Pakistan gathers: rice, curry, bread and dessert, together.",
   },
   {
     id: "walima",
