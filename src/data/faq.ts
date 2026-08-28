@@ -1,4 +1,4 @@
-import { site } from "@/data/site";
+import { hasOrderUrl, site } from "@/data/site";
 
 /**
  * FAQ content — three categories, six questions each. Sourced from Fatima
@@ -12,6 +12,20 @@ export type FaqQuestion = {
   answer: string;
   /** Public data doesn't fully cover this — answer is a placeholder pending owner sign-off. */
   needsConfirmation?: boolean;
+  /** Optional next-step link rendered under the answer once it's expanded —
+   *  internal-linking surface to the pages this answer is really about. */
+  cta?: { label: string; href: string; external?: boolean };
+};
+
+const menuCta = { label: "View menu", href: "/menu" };
+const cateringCta = { label: "View catering", href: "/catering" };
+const contactCta = { label: "Contact us", href: "/contact" };
+// Same "real order URL if set, otherwise the local /order page" logic
+// SiteNav uses for its own order button, so this never drifts from it.
+const orderCta = {
+  label: "Order now",
+  href: hasOrderUrl() ? site.orderUrl : "/order",
+  external: hasOrderUrl(),
 };
 
 export type FaqCategory = {
@@ -31,6 +45,7 @@ export const faqCategories: FaqCategory[] = [
         question: "Is Fatima Karahi halal?",
         answer:
           "Yes, Fatima Karahi is a fully halal Pakistani restaurant in Edmonton. Halal preparation is core to how we operate, not an add-on, so every karahi, charcoal BBQ, and curry dish on our menu is halal from ingredients through preparation.",
+        cta: menuCta,
       },
       {
         question: "Is Fatima Karahi family-owned?",
@@ -49,6 +64,7 @@ export const faqCategories: FaqCategory[] = [
         question: "Do you take reservations for large groups or private events?",
         answer: `We're happy to accommodate group bookings and larger parties when we can. Call us at ${site.phone} ahead of your visit so our team can confirm availability and prepare seating, service, or catering for your group.`,
         needsConfirmation: true,
+        cta: cateringCta,
       },
       {
         // Hours: NOT marked needsConfirmation, despite the source prompt's instruction to use a
@@ -63,6 +79,7 @@ export const faqCategories: FaqCategory[] = [
         question: "Do you offer delivery or takeout?",
         answer:
           "Yes, Fatima Karahi offers dine-in, takeout, and delivery, including through Uber Eats and DoorDash. Whether you're craving karahi, biryani, or charcoal BBQ at home, ordering online makes it easy to enjoy authentic Pakistani food in Edmonton.",
+        cta: orderCta,
       },
     ],
   },
@@ -75,16 +92,19 @@ export const faqCategories: FaqCategory[] = [
         question: "What kind of food do you serve?",
         answer:
           "We specialize in authentic Pakistani cuisine, including signature karahi, charcoal BBQ, curry dishes, biryani, rice dishes, fresh-baked tandoor bread, and traditional Pakistani desserts. Every dish is halal and prepared using recipes rooted in Lahori cooking traditions.",
+        cta: menuCta,
       },
       {
         question: "Do you have vegetarian options?",
         answer:
           "Yes, our menu includes vegetarian Pakistani dishes such as palak paneer and paneer butter masala, alongside our meat-based karahi, charcoal BBQ, and curry dishes, so there's something for every guest at the table.",
+        cta: { label: "View vegetarian menu", href: "/menu#vegetarian" },
       },
       {
         question: "What's your signature dish?",
         answer:
           "Our karahi (chicken and goat both stand out) is what guests consistently come back for. Slow-cooked in traditional style with fresh, hand-ground spices, our signature karahi is the dish most closely associated with the Fatima Karahi name.",
+        cta: { label: "View karahi menu", href: "/menu#chicken-karahi" },
       },
       {
         // NEEDS OWNER CONFIRMATION — kitchen's actual spice-adjustment policy isn't published anywhere public.
@@ -92,18 +112,20 @@ export const faqCategories: FaqCategory[] = [
         // actual policy is still unverified, only the wording changed.
         question: "Can you accommodate spice-level preferences?",
         answer:
-          "Let your server know your spice preference when ordering — mild, medium, or traditional Lahori-level heat — and ask what's possible for your dish. Most of our karahi and curry recipes can be adjusted on request.",
+          "Let your server know your spice preference when ordering (mild, medium, or traditional Lahori-level heat) and ask what's possible for your dish. Most of our karahi and curry recipes can be adjusted on request.",
         needsConfirmation: true,
       },
       {
         question: "Do you offer desserts?",
         answer:
           "Yes, including kheer and a range of ice cream shakes. Our desserts are a popular way to finish a meal of karahi, BBQ, or biryani, and they're a guest favorite alongside our savory Pakistani dishes.",
+        cta: { label: "View dessert menu", href: "/menu#desserts" },
       },
       {
         question: "Are portions large enough to share or take home?",
         answer:
           "Yes, portions are generous, and many guests take leftovers home. Our karahi and charcoal BBQ platters are designed for sharing, making Fatima Karahi a great choice for family meals and group dining in Edmonton.",
+        cta: { label: "View BBQ menu", href: "/menu#bbq" },
       },
     ],
   },
@@ -122,30 +144,34 @@ export const faqCategories: FaqCategory[] = [
         question: "Do you cater outside the restaurant for events like weddings or private parties?",
         answer:
           "Yes, catering is available for private events such as weddings, birthdays, and corporate gatherings. Reach out with your event details, including guest count and date, and our team will put together a halal Pakistani catering menu and quote for you.",
+        cta: cateringCta,
       },
       {
         question: "Can I place an order online?",
         answer:
           "Yes, you can order through Uber Eats, DoorDash, or directly through our online ordering platform. Online ordering makes it simple to get karahi, charcoal BBQ, biryani, and other Pakistani dishes delivered or ready for pickup.",
+        cta: orderCta,
       },
       {
-        // NEEDS OWNER CONFIRMATION — parking situation varies by location and isn't published anywhere public.
-        // SEO audit High #8: softened from a flat "Parking is available" to "call ahead to
-        // confirm" — actual on-site parking is still unverified, only the wording changed.
+        // Owner-confirmed 2026-08-28: the restaurant sits in a plaza, so there's
+        // dedicated on-site lot parking — no longer a placeholder pending
+        // sign-off, so needsConfirmation is dropped along with the old hedge.
         question: "Is parking available at the restaurant?",
-        answer: `Parking details can vary by location, so it's worth calling ahead — ${site.phone} — to confirm what's available before you visit for dine-in, takeout, or catering pickup.`,
-        needsConfirmation: true,
+        answer:
+          "Yes, there's ample parking available. Fatima Karahi is located in a plaza, so you'll find plenty of dedicated parking right outside for dine-in, takeout, and catering pickup.",
       },
       {
         question: "Is Fatima Karahi good for families and groups?",
         answer:
           "Yes, the space and menu are built around sharing, and it's a popular spot for family gatherings and casual group outings. From large karahi platters to communal-style charcoal BBQ, our restaurant is designed for families and groups to eat together.",
+        cta: menuCta,
       },
       {
         // Real phone number pulled from site.ts (the same single source the header/footer read
         // from) rather than hardcoded here, per the brief.
         question: "How can I contact you for catering or bulk orders?",
         answer: `Call us directly at ${site.phone}, or reach out through the contact form or WhatsApp button on this site. Our team can help with catering quotes, bulk orders, and any questions about our halal Pakistani menu.`,
+        cta: contactCta,
       },
       {
         // NEEDS OWNER CONFIRMATION — gift card availability isn't published anywhere public.
@@ -153,7 +179,7 @@ export const faqCategories: FaqCategory[] = [
         // card availability generally is still unverified, only the wording changed.
         question: "Do you offer gift cards?",
         answer:
-          "Gift cards aren't set up for online purchase yet — ask in-restaurant to check current availability if you'd like one for a friend or family member who loves Pakistani food, karahi, and charcoal BBQ as much as you do.",
+          "Gift cards aren't set up for online purchase yet. Ask in-restaurant to check current availability if you'd like one for a friend or family member who loves Pakistani food, karahi, and charcoal BBQ as much as you do.",
         needsConfirmation: true,
       },
     ],

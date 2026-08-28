@@ -21,7 +21,7 @@ export const site = {
   // Real ordering-platform URL (Loop POS). Every "Order online" button
   // across the site reads this one value via hasOrderUrl()/orderUrl — set
   // once here, wired everywhere.
-  orderUrl: "https://food.loopos.ca/?id=65d82147b3ee6659279e36da&slug=fatima-karahi-corner-edmonton-mzxkst",
+  orderUrl: "https://order.loopos.ca/fatima-karahi-corner-AB-CLG/menu",
 
   phone: "(780) 705-5000",
   phoneHref: "tel:+17807055000",

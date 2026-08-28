@@ -1340,5 +1340,19 @@
       "public\\img\\occasion-mehndi-1200.webp",
       "public\\img\\occasion-mehndi-1200.jpg"
     ]
+  },
+  "founder.jpg": {
+    "hash": "3721de6e08a1a2e7b6e31c0477e3655aa430410704879e4efd22738fc18031cd",
+    "outputs": [
+      "public\\img\\founder-300.avif",
+      "public\\img\\founder-300.webp",
+      "public\\img\\founder-300.jpg",
+      "public\\img\\founder-480.avif",
+      "public\\img\\founder-480.webp",
+      "public\\img\\founder-480.jpg",
+      "public\\img\\founder-828.avif",
+      "public\\img\\founder-828.webp",
+      "public\\img\\founder-828.jpg"
+    ]
   }
 }

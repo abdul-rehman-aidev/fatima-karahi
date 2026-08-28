@@ -106,6 +106,10 @@ const JOBS = {
   "occasion-birthday-party": [480, 828, 1200],
   "occasion-anniversary": [480, 828, 1200],
   "occasion-corporate-events": [480, 828, 1200],
+  // About page founder portrait — source is 1024×1024, so nothing above
+  // 828w (matches the other circular-photo usage on this page, AboutStory,
+  // rather than upscaling past the source).
+  founder: [300, 480, 828],
 };
 
 const FORMATS = [

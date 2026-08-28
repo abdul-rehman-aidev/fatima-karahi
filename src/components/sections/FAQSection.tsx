@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { cx } from "@/lib/cx";
-import { faqCategories as defaultCategories, type FaqCategory } from "@/data/faq";
+import { faqCategories as defaultCategories, type FaqCategory, type FaqQuestion } from "@/data/faq";
 
 /**
  * Reusable FAQ section — three category blocks, each a ~30/70 two-column
@@ -73,7 +74,7 @@ function FAQCategoryBlock({ category, dark }: { category: FaqCategory; dark: boo
         )}
       >
         {category.questions.map((q, i) => (
-          <FAQRow key={q.question} question={q.question} answer={q.answer} dark={dark} index={i} categoryId={category.heading} />
+          <FAQRow key={q.question} q={q} dark={dark} index={i} categoryId={category.heading} />
         ))}
       </div>
     </Reveal>
@@ -81,18 +82,17 @@ function FAQCategoryBlock({ category, dark }: { category: FaqCategory; dark: boo
 }
 
 function FAQRow({
-  question,
-  answer,
+  q,
   dark,
   index,
   categoryId,
 }: {
-  question: string;
-  answer: string;
+  q: FaqQuestion;
   dark: boolean;
   index: number;
   categoryId: string;
 }) {
+  const { question, answer, cta } = q;
   const [open, setOpen] = useState(false);
   const slug = categoryId.toLowerCase().replace(/\s+/g, "-");
   const triggerId = `faq-${slug}-trigger-${index}`;
@@ -151,15 +151,27 @@ function FAQRow({
         className="grid transition-[grid-template-rows,opacity] duration-[380ms] ease-in-out"
         style={{ gridTemplateRows: open ? "1fr" : "0fr", opacity: open ? 1 : 0 }}
       >
-        <div className="min-h-0 overflow-hidden">
+        <div className="min-h-0 overflow-hidden pb-[20px]">
           <p
             className={cx(
-              "max-w-[62ch] pb-[20px] text-[0.9rem] leading-[1.7]",
+              "max-w-[62ch] text-[0.9rem] leading-[1.7]",
               dark ? "text-sage" : "text-stone",
             )}
           >
             {answer}
           </p>
+          {cta && (
+            <div className="mt-s4">
+              <Button
+                variant={dark ? "outline" : "secondary"}
+                size="sm"
+                href={cta.href}
+                external={cta.external}
+              >
+                {cta.label}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
