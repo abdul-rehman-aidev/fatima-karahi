@@ -70,7 +70,7 @@ export default function MenuPage() {
         />
 
         <div className="relative z-[5] mx-auto max-w-content px-[clamp(20px,5vw,56px)] text-center">
-          <Eyebrow>The menu</Eyebrow>
+          <Eyebrow size="lg">The menu</Eyebrow>
           <p lang="ur" dir="rtl" className="mb-s1 mt-s4 text-[2.4rem] leading-[1.5] text-gold-bright">
             کھانا
           </p>

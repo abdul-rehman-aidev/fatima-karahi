@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/ds/BrandMark";
 import { Button } from "@/components/ds/Button";
-import { WhatsAppButton } from "@/components/ds/WhatsAppButton";
 import { hasOrderUrl, site } from "@/data/site";
 
 /**
@@ -11,7 +10,7 @@ import { hasOrderUrl, site } from "@/data/site";
  * When the real ordering URL is configured it auto-redirects after a beat
  * (with a visible manual link, and no redirect under reduced motion‑style
  * hesitation for keyboard users mid-navigation). Until then it offers the
- * menu, phone and WhatsApp.
+ * menu and phone.
  */
 export function OrderInterstitial() {
   const ready = hasOrderUrl();
@@ -61,14 +60,13 @@ export function OrderInterstitial() {
           <>
             {/* TODO(client): set data/site.ts → orderUrl to enable direct online ordering */}
             <p className="mx-auto mb-s5 max-w-[44ch] text-[0.95rem] text-sage">
-              Online ordering is almost ready. Until then, call or WhatsApp your order, and
+              Online ordering is almost ready. Until then, call in your order, and
               we&rsquo;ll have it hot when you arrive.
             </p>
             <div className="flex flex-wrap justify-center gap-s4">
               <Button variant="primary" size="lg" href={site.phoneHref} external>
                 Call {site.phone}
               </Button>
-              <WhatsAppButton label="WhatsApp your order" />
             </div>
           </>
         )}

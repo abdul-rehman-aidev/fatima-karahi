@@ -170,7 +170,7 @@ export const faqCategories: FaqCategory[] = [
         // Real phone number pulled from site.ts (the same single source the header/footer read
         // from) rather than hardcoded here, per the brief.
         question: "How can I contact you for catering or bulk orders?",
-        answer: `Call us directly at ${site.phone}, or reach out through the contact form or WhatsApp button on this site. Our team can help with catering quotes, bulk orders, and any questions about our halal Pakistani menu.`,
+        answer: `Call us directly at ${site.phone}, or reach out through the contact form on this site. Our team can help with catering quotes, bulk orders, and any questions about our halal Pakistani menu.`,
         cta: contactCta,
       },
       {

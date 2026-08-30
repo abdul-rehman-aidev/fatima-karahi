@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Logotype } from "@/components/ds/Logotype";
 import { Button } from "@/components/ds/Button";
-import { WhatsAppGlyph } from "@/components/ds/WhatsAppButton";
-import { hasOrderUrl, site, waHref } from "@/data/site";
+import { PhoneGlyph } from "@/components/ds/CallNowButton";
+import { hasOrderUrl, site } from "@/data/site";
 import { cx } from "@/lib/cx";
 
 const LINKS = [
@@ -21,7 +21,7 @@ const LINKS = [
 /**
  * Condensing site nav: transparent over the hero, solid emerald-deep with a
  * gold hairline once scrolled. Bilingual lockup left; gold order pill +
- * WhatsApp right; full-screen emerald overlay menu on mobile (focus-trapped,
+ * call button right; full-screen emerald overlay menu on mobile (focus-trapped,
  * Esc-closable, large Fraunces links).
  */
 export function SiteNav() {
@@ -136,13 +136,11 @@ export function SiteNav() {
           </div>
 
           <a
-            href={waHref()}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="WhatsApp us"
+            href={site.phoneHref}
+            aria-label="Call now"
             className="hidden h-[38px] w-[38px] place-items-center rounded-pill border border-[color-mix(in_srgb,var(--saffron)_40%,transparent)] text-gold transition-colors duration-[var(--dur)] hover:border-gold hover:text-gold-bright md:grid"
           >
-            <WhatsAppGlyph size={18} />
+            <PhoneGlyph size={18} />
           </a>
 
           {/* Mobile toggle */}
@@ -234,12 +232,10 @@ export function SiteNav() {
               {site.phone}
             </a>
             <a
-              href={waHref()}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={site.phoneHref}
               className="inline-flex items-center gap-s2 font-body text-[0.95rem] font-semibold text-gold no-underline"
             >
-              <WhatsAppGlyph size={18} /> WhatsApp
+              <PhoneGlyph size={18} /> Call now
             </a>
           </div>
         </div>

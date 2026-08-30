@@ -25,12 +25,6 @@ export const site = {
 
   phone: "(780) 705-5000",
   phoneHref: "tel:+17807055000",
-  // No separate WhatsApp number given — this field mirrored `phone` as a
-  // placeholder before, so it's updated to the same real number (with the
-  // +1 country code — waHref() strips this to digits-only for the wa.me
-  // link, which needs the country code to resolve correctly). Flag if
-  // WhatsApp should actually go to a different line.
-  whatsapp: "+1 (780) 705-5000",
 
   address: {
     street: "10680 Ellerslie Rd SW",
@@ -71,15 +65,12 @@ export const site = {
 
   email: "hello@fatimakarahi.ca", // TODO(client)
 
-  // TODO(client): real social profiles (empty string = link hidden)
-  // instagram: SEO audit found this pointing at a dormant, unrelated Calgary
-  // account (inactive since 2019) — both the on-page link and the JSON-LD
-  // `sameAs` array read this same value, so blanking it here removes the
-  // wrong claim from both places at once. Restore once the real handle is
-  // confirmed.
+  // Real social profiles, confirmed by the client Aug 30, 2026 — both the
+  // on-page footer link and the JSON-LD `sameAs` array read these same
+  // values (empty string = link hidden), so this is the one place to edit.
   socials: {
-    instagram: "",
-    facebook: "https://facebook.com/fatimakarahi",
+    instagram: "https://www.instagram.com/fatimakarahi.yeg/",
+    facebook: "https://www.facebook.com/fatimakarahi.yeg/",
     tiktok: "",
   },
 
@@ -138,6 +129,3 @@ export function hasOrderUrl(): boolean {
   return site.orderUrl.startsWith("http");
 }
 
-export function waHref(): string {
-  return `https://wa.me/${site.whatsapp.replace(/[^\d]/g, "")}`;
-}

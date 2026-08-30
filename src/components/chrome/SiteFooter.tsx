@@ -3,7 +3,7 @@ import { Logotype } from "@/components/ds/Logotype";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { Divider } from "@/components/ds/Divider";
 import { Button } from "@/components/ds/Button";
-import { WhatsAppButton } from "@/components/ds/WhatsAppButton";
+import { CallNowButton } from "@/components/ds/CallNowButton";
 import { HalalBadge } from "@/components/ds/HalalBadge";
 import { site } from "@/data/site";
 
@@ -81,7 +81,7 @@ export function SiteFooter() {
               <a href={`mailto:${site.email}`} className="text-[0.95rem] text-ivory no-underline hover:text-gold-bright">
                 {site.email}
               </a>
-              <WhatsAppButton label="WhatsApp us" />
+              <CallNowButton label="Call now" />
               <Button variant="primary" size="sm" href="/catering#quote">
                 Request a catering quote
               </Button>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Eyebrow } from "@/components/ds/Eyebrow";
-import { WhatsAppButton } from "@/components/ds/WhatsAppButton";
+import { CallNowButton } from "@/components/ds/CallNowButton";
 import { Reveal } from "@/components/motion/Reveal";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { MapFrame } from "@/components/sections/MapFrame";
@@ -10,7 +10,7 @@ import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
 export const metadata: Metadata = {
   title: "Contact: find us in Edmonton",
   description:
-    "Visit Fatima Karahi in Edmonton. Address, hours, phone, WhatsApp and directions. We'd love to host you.",
+    "Visit Fatima Karahi in Edmonton. Address, hours, phone, and directions. We'd love to host you.",
   alternates: { canonical: "/contact" },
 };
 
@@ -24,7 +24,7 @@ export default function ContactPage() {
   return (
     <>
       <section className="bg-emerald pb-[clamp(3rem,6vw,4.5rem)] pt-[calc(84px+clamp(2.5rem,6vw,4rem))] text-center">
-        <Eyebrow>Contact</Eyebrow>
+        <Eyebrow size="lg">Contact</Eyebrow>
         <p lang="ur" dir="rtl" className="mb-s1 mt-s4 text-[2.2rem] leading-[1.5] text-gold-bright">
           رابطہ
         </p>
@@ -69,7 +69,7 @@ export default function ContactPage() {
                 </a>
               </p>
               <div className="mt-s4">
-                <WhatsAppButton tone="dark" label="WhatsApp us" />
+                <CallNowButton tone="dark" label="Call now" />
               </div>
               {socials.length > 0 && (
                 <ul className="mt-s5 flex gap-s5">

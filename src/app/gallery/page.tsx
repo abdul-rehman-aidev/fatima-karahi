@@ -18,7 +18,7 @@ export default function GalleryPage() {
     <>
       <section className="bg-emerald-deep pb-s8 pt-[calc(84px+var(--s-8))] text-ivory">
         <Reveal className="mx-auto max-w-[620px] px-[clamp(20px,5vw,56px)] text-center">
-          <Eyebrow tone="gold" className="justify-center">
+          <Eyebrow tone="gold" size="lg" className="justify-center">
             Gallery
           </Eyebrow>
           <h1 className="mb-s4 mt-s4 font-display text-display-l font-normal text-ivory">
