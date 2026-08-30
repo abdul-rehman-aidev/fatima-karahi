@@ -1,5 +1,4 @@
 import { Button } from "@/components/ds/Button";
-import { Eyebrow } from "@/components/ds/Eyebrow";
 import { HalalBadge } from "@/components/ds/HalalBadge";
 import { HeroCarousel } from "@/components/sections/HeroCarousel";
 import { hasOrderUrl, site } from "@/data/site";
@@ -67,26 +66,23 @@ export function HomeHero() {
       <div
         className="hero-seq relative z-[5] mx-auto flex w-full max-w-[760px] flex-col items-center px-[clamp(20px,5vw,56px)] py-s8 text-center [text-shadow:0_2px_12px_rgba(0,0,0,0.6)]"
       >
-        <div data-seq="1">
-          <Eyebrow className="justify-center">From Pakistan to Edmonton</Eyebrow>
-        </div>
         <p
-          data-seq="2"
+          data-seq="1"
           className="mb-s1 mt-s5 font-script text-[clamp(3rem,7.5vw,5.1rem)] leading-[1.6] text-gold-bright"
         >
           Fatima Karahi
         </p>
         <h1
-          data-seq="3"
+          data-seq="2"
           className="m-0 font-display text-display-xl font-normal tracking-[0.01em] text-ivory [text-shadow:0_4px_16px_rgba(0,0,0,0.65)]"
         >
           Flavours <em className="italic text-gold-bright">straight</em> from Pakistan.
         </h1>
-        <p data-seq="4" className="mt-s5 max-w-[46ch] text-body-l text-ivory">
+        <p data-seq="3" className="mt-s5 max-w-[46ch] text-body-l text-ivory">
           The taste of Pakistan, now in Edmonton: slow-cooked karahi, charcoal BBQ, and the
           warmth of a Pakistani <i>dastarkhwan</i>.
         </p>
-        <div data-seq="5" className="mt-s6 flex flex-wrap justify-center gap-s4">
+        <div data-seq="4" className="mt-s6 flex flex-wrap justify-center gap-s4">
           <Button variant="scrim" size="lg" href="/catering#quote">
             Request a catering quote
           </Button>
@@ -95,7 +91,7 @@ export function HomeHero() {
           </Button>
         </div>
         <ul
-          data-seq="6"
+          data-seq="5"
           className="mt-s6 flex flex-wrap items-center justify-center gap-x-s5 gap-y-s2 text-eyebrow font-semibold uppercase tracking-[0.1em] text-sage"
         >
           {/* SEO audit Medium #12: the badge previously stood alone with no
