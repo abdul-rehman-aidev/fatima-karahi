@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Divider } from "@/components/ds/Divider";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { cx } from "@/lib/cx";
-import type { GalleryRole, GalleryTile } from "@/data/gallery";
+import type { GalleryPhotoTile, GalleryQuoteTile, GalleryRole, GalleryTile } from "@/sanity/types";
 
 /**
  * Gallery collage — a responsive CSS grid (`grid-flow-row-dense` + each
@@ -43,11 +43,11 @@ export function GalleryGrid({ tiles }: { tiles: GalleryTile[] }) {
   return (
     <div className="bg-emerald-deep px-s5 py-s6 md:px-s7 md:py-s8">
       <div className="mx-auto grid max-w-content grid-cols-2 grid-flow-row-dense gap-s5 [grid-auto-rows:44vw] sm:grid-cols-4 sm:gap-s6 sm:[grid-auto-rows:22vw] lg:grid-cols-6 lg:[grid-auto-rows:15vw]">
-        {visible.map((tile, i) =>
-          tile.type === "quote" ? (
-            <QuoteTile key={`quote-${i}`} tile={tile} />
+        {visible.map((tile) =>
+          tile._type === "galleryQuoteTile" ? (
+            <QuoteTile key={tile._key} tile={tile} />
           ) : (
-            <PhotoTile key={tile.name} tile={tile} />
+            <PhotoTile key={tile._key} tile={tile} />
           ),
         )}
       </div>
@@ -67,29 +67,21 @@ export function GalleryGrid({ tiles }: { tiles: GalleryTile[] }) {
   );
 }
 
-function PhotoTile({ tile }: { tile: Extract<GalleryTile, { type: "photo" }> }) {
+function PhotoTile({ tile }: { tile: GalleryPhotoTile }) {
   return (
-    <div
-      className={cx(
-        "group relative overflow-hidden rounded-card shadow-card",
-        roleSpan[tile.role],
-      )}
-    >
-      <Picture
-        name={tile.name}
-        alt={tile.alt}
-        widths={[480, 828, 1200]}
+    <div className={cx("group relative overflow-hidden rounded-card shadow-card", roleSpan[tile.role])}>
+      <SanityPicture
+        image={tile.image}
+        alt={tile.image.alt}
         sizes={roleSizes[tile.role]}
-        width={1200}
-        height={1500}
         className="absolute inset-0"
-        imgClassName="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-[var(--dur-slow)] motion-safe:ease-[var(--ease-soft)] motion-safe:group-hover:scale-[1.045]"
+        imgClassName="motion-safe:transition-transform motion-safe:duration-[var(--dur-slow)] motion-safe:ease-[var(--ease-soft)] motion-safe:group-hover:scale-[1.045]"
       />
     </div>
   );
 }
 
-function QuoteTile({ tile }: { tile: Extract<GalleryTile, { type: "quote" }> }) {
+function QuoteTile({ tile }: { tile: GalleryQuoteTile }) {
   return (
     <div
       className={cx(

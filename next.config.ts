@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Fully static v1 — no server logic. The quote/contact forms post to a
-  // pluggable endpoint (see src/lib/forms.ts).
-  output: "export",
-  // The default optimizer is unavailable with `output: 'export'`; responsive
-  // AVIF/WebP variants are pre-generated at build time by scripts/optimize-images.mjs
-  // and consumed through components/media/Picture.tsx.
-  images: { unoptimized: true },
+  // Server-rendered (not `output: "export"`) so Sanity's Live Content API,
+  // Draft Mode, and Visual Editing can work — see src/sanity/. Most images
+  // still go through the local pre-generated pipeline (components/media/
+  // Picture.tsx, scripts/optimize-images.mjs); only Sanity-managed images
+  // (Menu section photos, Gallery) use next/image via SanityPicture.tsx,
+  // which needs cdn.sanity.io allowed below.
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+  },
   trailingSlash: true,
 };
 

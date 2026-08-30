@@ -3,7 +3,8 @@ import { Divider } from "@/components/ds/Divider";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { GalleryGrid } from "@/components/sections/GalleryGrid";
-import { galleryTiles } from "@/data/gallery";
+import { sanityFetch } from "@/sanity/live";
+import { GALLERY_QUERY } from "@/sanity/queries";
 import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
 
 export const metadata: Metadata = {
@@ -13,7 +14,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/gallery" },
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const { data } = await sanityFetch({ query: GALLERY_QUERY });
+  const galleryTiles = data?.tiles ?? [];
+
   return (
     <>
       <section className="bg-emerald-deep pb-s8 pt-[calc(84px+var(--s-8))] text-ivory">

@@ -1,5 +1,5 @@
 import { site } from "@/data/site";
-import { menu } from "@/data/menu";
+import type { MenuCategory } from "@/sanity/types";
 
 /**
  * Restaurant + LocalBusiness JSON-LD with the Edmonton NAP, emitted site-wide
@@ -98,8 +98,8 @@ export function BreadcrumbJsonLd({ name, path }: { name: string; path: string })
   );
 }
 
-/** Full Menu schema generated from data/menu.ts — emitted on /menu. */
-export function MenuJsonLd() {
+/** Full Menu schema generated from the Sanity `menu` document — emitted on /menu. */
+export function MenuJsonLd({ menu }: { menu: MenuCategory[] }) {
   const data = {
     "@context": "https://schema.org",
     "@type": "Menu",
@@ -109,7 +109,7 @@ export function MenuJsonLd() {
     hasMenuSection: menu.map((cat) => ({
       "@type": "MenuSection",
       name: cat.label,
-      hasMenuItem: cat.dishes.map((d) => ({
+      hasMenuItem: (cat.dishes ?? []).map((d) => ({
         "@type": "MenuItem",
         name: d.name,
         ...(d.desc ? { description: d.desc } : {}),
@@ -121,14 +121,14 @@ export function MenuJsonLd() {
         offers: d.priceTiers
           ? {
               "@type": "AggregateOffer",
-              lowPrice: Math.min(...d.priceTiers.map((t) => Number(t.price.replace(/[^0-9.]/g, "")))),
-              highPrice: Math.max(...d.priceTiers.map((t) => Number(t.price.replace(/[^0-9.]/g, "")))),
+              lowPrice: Math.min(...d.priceTiers.map((t) => t.price)),
+              highPrice: Math.max(...d.priceTiers.map((t) => t.price)),
               offerCount: d.priceTiers.length,
               priceCurrency: "CAD",
             }
           : {
               "@type": "Offer",
-              price: (d.price ?? "").replace(/[^0-9.]/g, ""),
+              price: d.price ?? 0,
               priceCurrency: "CAD",
             },
       })),

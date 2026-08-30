@@ -1,37 +1,30 @@
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { SpiceDots } from "@/components/ds/MenuRow";
 import { cx } from "@/lib/cx";
-import type { Dish } from "@/data/menu";
+import { formatPrice } from "@/lib/format";
+import type { Dish, MenuSectionImage } from "@/sanity/types";
 
 /**
  * Desktop layout: one static section photo sticky on the left (client-
- * supplied per menu section, not per dish — see data/menu.ts), a plain row
- * list on the right. Sections with no photo (Kids Menu, Breakfast Specials)
- * render the list full-width instead of leaving an empty column.
+ * supplied per menu section, not per dish — see the `menu` document in
+ * Sanity), a plain row list on the right. Sections with no photo (Kids Menu,
+ * Breakfast Specials) render the list full-width instead of leaving an empty
+ * column.
  */
-export function MenuItemsDesktop({ dishes, image }: { dishes: Dish[]; image?: string }) {
+export function MenuItemsDesktop({ dishes, image }: { dishes: Dish[]; image?: MenuSectionImage | null }) {
   return (
     <div className={cx("mt-s6 grid items-start gap-s7", image ? "grid-cols-2" : "grid-cols-1")}>
       {image && (
         <div className="sticky top-[100px]">
           <div className="relative aspect-[4/5] overflow-hidden rounded-card shadow-card">
-            <Picture
-              name={image}
-              alt=""
-              widths={[480, 828, 1200]}
-              sizes="(min-width: 1024px) 38vw, 45vw"
-              width={1200}
-              height={1500}
-              className="absolute inset-0"
-              imgClassName="h-full w-full object-cover"
-            />
+            <SanityPicture image={image} alt="" sizes="(min-width: 1024px) 38vw, 45vw" className="absolute inset-0" />
           </div>
         </div>
       )}
 
       <div className="divide-y divide-[color-mix(in_srgb,var(--stone)_18%,transparent)]">
         {dishes.map((dish) => (
-          <DesktopRow key={dish.name} dish={dish} />
+          <DesktopRow key={dish._key} dish={dish} />
         ))}
       </div>
     </div>
@@ -79,13 +72,17 @@ function DishPrice({ dish }: { dish: Dish }) {
     return (
       <div className="shrink-0 text-right font-display text-[0.9rem] font-semibold text-gold-deep">
         {dish.priceTiers.map((tier) => (
-          <div key={tier.label} className="whitespace-nowrap">
+          <div key={tier._key} className="whitespace-nowrap">
             <span className="mr-[6px] font-body text-[0.75rem] font-normal text-stone">{tier.label}</span>
-            {tier.price}
+            {formatPrice(tier.price)}
           </div>
         ))}
       </div>
     );
   }
-  return <span className="shrink-0 font-display text-[1.05rem] font-semibold text-gold-deep">{dish.price}</span>;
+  return (
+    <span className="shrink-0 font-display text-[1.05rem] font-semibold text-gold-deep">
+      {dish.price != null ? formatPrice(dish.price) : null}
+    </span>
+  );
 }

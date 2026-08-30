@@ -1,6 +1,7 @@
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { SpiceDots } from "@/components/ds/MenuRow";
-import type { Dish } from "@/data/menu";
+import { formatPrice } from "@/lib/format";
+import type { Dish, MenuSectionImage } from "@/sanity/types";
 
 /**
  * Mobile layout: one static section photo (if the section has one) above a
@@ -9,26 +10,18 @@ import type { Dish } from "@/data/menu";
  * of per dish, so there's nothing left to reveal per row — every dish's name,
  * price, and description are already shown up front.
  */
-export function MenuItemsMobile({ dishes, image }: { dishes: Dish[]; image?: string }) {
+export function MenuItemsMobile({ dishes, image }: { dishes: Dish[]; image?: MenuSectionImage | null }) {
   return (
     <div className="mt-s6">
       {image && (
-        <div className="mb-s6 overflow-hidden rounded-card shadow-card">
-          <Picture
-            name={image}
-            alt=""
-            widths={[480, 828]}
-            sizes="100vw"
-            width={1200}
-            height={1500}
-            imgClassName="h-[220px] w-full object-cover sm:h-[280px]"
-          />
+        <div className="relative mb-s6 h-[220px] w-full overflow-hidden rounded-card shadow-card sm:h-[280px]">
+          <SanityPicture image={image} alt="" sizes="100vw" className="absolute inset-0" />
         </div>
       )}
 
       <div className="divide-y divide-[color-mix(in_srgb,var(--stone)_18%,transparent)]">
         {dishes.map((dish) => (
-          <MobileRow key={dish.name} dish={dish} />
+          <MobileRow key={dish._key} dish={dish} />
         ))}
       </div>
     </div>
@@ -70,13 +63,17 @@ function DishPrice({ dish }: { dish: Dish }) {
     return (
       <div className="shrink-0 text-right font-display text-[0.85rem] font-semibold text-gold-deep">
         {dish.priceTiers.map((tier) => (
-          <div key={tier.label} className="whitespace-nowrap">
+          <div key={tier._key} className="whitespace-nowrap">
             <span className="mr-[4px] font-body text-[0.7rem] font-normal text-stone">{tier.label}</span>
-            {tier.price}
+            {formatPrice(tier.price)}
           </div>
         ))}
       </div>
     );
   }
-  return <span className="shrink-0 font-display text-[1rem] font-semibold text-gold-deep">{dish.price}</span>;
+  return (
+    <span className="shrink-0 font-display text-[1rem] font-semibold text-gold-deep">
+      {dish.price != null ? formatPrice(dish.price) : null}
+    </span>
+  );
 }

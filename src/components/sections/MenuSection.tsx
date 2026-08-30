@@ -2,7 +2,7 @@
 
 import { Reveal } from "@/components/motion/Reveal";
 import { useMediaQuery } from "@/lib/useMediaQuery";
-import type { MenuCategory } from "@/data/menu";
+import type { MenuCategory } from "@/sanity/types";
 import { MenuItemsDesktop } from "@/components/sections/MenuItemsDesktop";
 import { MenuItemsMobile } from "@/components/sections/MenuItemsMobile";
 
@@ -19,12 +19,12 @@ export function MenuSection({ category }: { category: MenuCategory }) {
 
   return (
     <section
-      id={category.id}
-      aria-labelledby={`${category.id}-h`}
+      id={category.categoryId}
+      aria-labelledby={`${category.categoryId}-h`}
       className="scroll-mt-[132px] pt-[clamp(2.5rem,5vw,4rem)]"
     >
       <Reveal className="text-center">
-        <h2 id={`${category.id}-h`} className="m-0 font-display text-display-m text-ink">
+        <h2 id={`${category.categoryId}-h`} className="m-0 font-display text-display-m text-ink">
           {category.label}
         </h2>
         <span lang="ur" dir="rtl" className="mt-[6px] block text-[1.3rem] leading-[1.5] text-stone">
@@ -43,9 +43,9 @@ export function MenuSection({ category }: { category: MenuCategory }) {
 
       <Reveal delay={80}>
         {isDesktop ? (
-          <MenuItemsDesktop dishes={category.dishes} image={category.image} />
+          <MenuItemsDesktop dishes={category.dishes ?? []} image={category.sectionImage} />
         ) : (
-          <MenuItemsMobile dishes={category.dishes} image={category.image} />
+          <MenuItemsMobile dishes={category.dishes ?? []} image={category.sectionImage} />
         )}
       </Reveal>
     </section>

@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { cx } from "@/lib/cx";
-import { menu, type Dish } from "@/data/menu";
+import { formatPrice } from "@/lib/format";
+import type { MustTryDish } from "@/components/sections/mustTryDishes";
 
 /**
  * "Must Try" showcase — a curated 5-dish rail (not "whatever happens to be
@@ -28,21 +29,7 @@ import { menu, type Dish } from "@/data/menu";
  * already-contrast-verified tokens that serve the same role: --emerald-deep
  * for the dark panel, --saffron for the price.
  */
-const MUST_TRY_NAMES = ["Beef Nehari", "Chapli Kebab", "Khoya Kheer", "Chicken Biryani", "Chicken Wings"];
-
-type MustTryDish = Dish & { categoryImage?: string };
-
-function findMustTryDish(name: string): MustTryDish | undefined {
-  for (const category of menu) {
-    const dish = category.dishes.find((d) => d.name === name);
-    if (dish) return { ...dish, categoryImage: category.image };
-  }
-  return undefined;
-}
-
-const dishes: MustTryDish[] = MUST_TRY_NAMES.map(findMustTryDish).filter((d): d is MustTryDish => Boolean(d));
-
-export function SpecialsCarousel() {
+export function SpecialsCarousel({ dishes }: { dishes: MustTryDish[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -146,20 +133,21 @@ function SpecialCard({ dish, index, total }: { dish: MustTryDish; index: number;
       className="group m-0 w-[82%] shrink-0 snap-start transition-transform duration-[var(--dur)] ease-[var(--ease-soft)] hover:scale-[1.025] sm:w-[46%] lg:w-[267px]"
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-t-card">
-        <Picture
-          name={dish.categoryImage!}
-          alt={dish.name}
-          widths={[480, 828, 1200]}
-          sizes="(min-width: 1024px) 267px, (min-width: 640px) 46vw, 82vw"
-          width={1200}
-          height={1500}
-          className="absolute inset-0"
-          imgClassName="h-full w-full object-cover transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.05]"
-        />
+        {dish.categoryImage && (
+          <SanityPicture
+            image={dish.categoryImage}
+            alt={dish.name}
+            sizes="(min-width: 1024px) 267px, (min-width: 640px) 46vw, 82vw"
+            className="absolute inset-0"
+            imgClassName="transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.05]"
+          />
+        )}
       </div>
       <figcaption className="flex items-center justify-between gap-3 rounded-b-card bg-emerald-deep px-[18px] py-[16px] shadow-card transition-shadow duration-[var(--dur)] ease-[var(--ease-soft)] group-hover:shadow-lift">
         <span className="font-body text-[0.95rem] font-medium text-ivory">{dish.name}</span>
-        <span className="font-body text-[0.95rem] font-bold text-gold">{dish.price}</span>
+        <span className="font-body text-[0.95rem] font-bold text-gold">
+          {dish.price != null ? formatPrice(dish.price) : null}
+        </span>
       </figcaption>
     </figure>
   );

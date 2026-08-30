@@ -6,7 +6,8 @@ import { Reveal } from "@/components/motion/Reveal";
 import { MenuCategoryNav } from "@/components/sections/MenuCategoryNav";
 import { MenuSection } from "@/components/sections/MenuSection";
 import { BreadcrumbJsonLd, MenuJsonLd } from "@/components/chrome/JsonLd";
-import { menu } from "@/data/menu";
+import { sanityFetch } from "@/sanity/live";
+import { MENU_QUERY } from "@/sanity/queries";
 import { hasOrderUrl, site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -16,7 +17,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/menu" },
 };
 
-export default function MenuPage() {
+export default async function MenuPage() {
+  const { data } = await sanityFetch({ query: MENU_QUERY });
+  const menu = data?.categories ?? [];
   const orderHref = hasOrderUrl() ? site.orderUrl : "/order";
   const orderExternal = hasOrderUrl();
 
@@ -80,13 +83,13 @@ export default function MenuPage() {
         </div>
       </section>
 
-      <MenuCategoryNav cats={menu.map((c) => ({ id: c.id, label: c.label }))} />
+      <MenuCategoryNav cats={menu.map((c) => ({ id: c.categoryId, label: c.label }))} />
 
       {/* Editorial lists — ivory conversion zone */}
       <div className="bg-ivory pb-section pt-[clamp(2rem,4vw,3rem)] text-ink">
         <div className="mx-auto max-w-content px-[clamp(20px,5vw,56px)]">
           {menu.map((cat) => (
-            <MenuSection key={cat.id} category={cat} />
+            <MenuSection key={cat._key} category={cat} />
           ))}
 
           {/* Tail CTAs */}
@@ -104,7 +107,7 @@ export default function MenuPage() {
         </div>
       </div>
 
-      <MenuJsonLd />
+      <MenuJsonLd menu={menu} />
       <BreadcrumbJsonLd name="Menu" path="/menu/" />
     </>
   );

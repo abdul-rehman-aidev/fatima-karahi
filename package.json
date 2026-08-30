@@ -7,14 +7,19 @@
     "images": "node scripts/optimize-images.mjs",
     "prebuild": "node scripts/optimize-images.mjs",
     "build": "next build",
-    "serve": "npx serve@latest out -l 4173",
+    "start": "next start",
+    "serve": "next start -p 4173",
     "indexnow": "node scripts/indexnow-submit.mjs"
   },
   "dependencies": {
+    "@sanity/client": "^7.26.2",
+    "@sanity/image-url": "^2.1.1",
     "class-variance-authority": "^0.7.1",
     "next": "^15.3.0",
+    "next-sanity": "^11.6.13",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "styled-components": "^6.5.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.0",
@@ -24,6 +29,7 @@
     "postcss": "^8.4.49",
     "sharp": "^0.34.0",
     "tailwindcss": "^4.1.0",
+    "tsx": "^4.23.13",
     "typescript": "^5.7.0"
   }
 }

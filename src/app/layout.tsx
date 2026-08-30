@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { draftMode } from "next/headers";
+import { VisualEditing } from "next-sanity/visual-editing";
 import { marcellus, cormorant, openSans, allura, gulzar } from "./fonts";
 import { SiteNav } from "@/components/chrome/SiteNav";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { FloatingActions } from "@/components/chrome/FloatingActions";
 import { RestaurantJsonLd } from "@/components/chrome/JsonLd";
+import { SanityLive } from "@/sanity/live";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -32,7 +35,9 @@ export const viewport: Viewport = {
   themeColor: "#112D2A",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const isDraftMode = (await draftMode()).isEnabled;
+
   return (
     <html
       lang="en"
@@ -50,6 +55,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <FloatingActions />
         <RestaurantJsonLd />
+        <SanityLive />
+        {isDraftMode && <VisualEditing />}
       </body>
     </html>
   );
