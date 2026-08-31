@@ -87,7 +87,7 @@ export default function CateringPage() {
 
         <div className="relative z-[5] mx-auto w-full max-w-content px-[clamp(20px,5vw,56px)] py-s8">
           <div className="max-w-[620px]">
-            <Eyebrow>Catering</Eyebrow>
+            <Eyebrow size="lg">Catering</Eyebrow>
             <p lang="ur" dir="rtl" className="mb-s1 mt-s4 text-right text-[2.2rem] leading-[1.5] text-gold-bright sm:text-left">
               دعوت
             </p>

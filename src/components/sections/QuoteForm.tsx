@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ds/Button";
 import { Divider } from "@/components/ds/Divider";
 import { Field } from "@/components/ds/Field";
-import { WhatsAppButton } from "@/components/ds/WhatsAppButton";
+import { CallNowButton } from "@/components/ds/CallNowButton";
 import { cateringServiceOptions, quoteOccasions } from "@/data/catering";
 import { site } from "@/data/site";
 import { submitForm } from "@/lib/forms";
@@ -99,7 +99,7 @@ export function QuoteForm() {
     if (s === 4) {
       if (!values.name.trim()) next.name = "We need a name to address the quote to.";
       if (!/^[+\d][\d\s().-]{6,}$/.test(values.phone.trim()))
-        next.phone = "Enter a phone or WhatsApp number we can reach you on.";
+        next.phone = "Enter a phone number we can reach you on.";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -215,7 +215,7 @@ export function QuoteForm() {
           className="mb-s5 rounded-input border border-spice bg-[color-mix(in_srgb,var(--spice)_8%,transparent)] px-s4 py-s3 text-[0.9rem] text-spice"
         >
           We couldn&rsquo;t send that just now, but nothing you typed was lost. Please try again, or
-          reach us on WhatsApp below.
+          call us below.
         </div>
       )}
 
@@ -360,7 +360,7 @@ export function QuoteForm() {
             />
             <Field
               id="phone"
-              label="Phone or WhatsApp"
+              label="Phone number"
               type="tel"
               inputMode="tel"
               placeholder="+1 780 …"
@@ -396,7 +396,7 @@ export function QuoteForm() {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-s3">
-          <WhatsAppButton tone="dark" label="Quick inquiry" />
+          <CallNowButton tone="dark" label="Call now" />
           {step < STEPS.length - 1 ? (
             <Button variant="primary" type="submit">
               Continue
