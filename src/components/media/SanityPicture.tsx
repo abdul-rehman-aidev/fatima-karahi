@@ -4,14 +4,15 @@ import { urlFor } from "@/sanity/image";
 import type { SanityImageRef } from "@/sanity/types";
 
 /**
- * Sanity-CDN-backed equivalent of media/Picture.tsx, used only for the
- * Menu section photos and Gallery photos (both Sanity-managed). Every other
- * image on the site keeps using the local pre-generated pipeline via
- * Picture.tsx — this component is not a replacement for it.
+ * Sanity-CDN-backed image component, used for every Sanity-managed photo
+ * on the site (Menu, Gallery, and the shared Site Photos pool).
  *
- * Always used inside a `relative` container with a fixed aspect ratio or
- * grid span (matching Picture's `className="absolute inset-0"` convention),
- * so `fill` needs no explicit width/height for CLS.
+ * By default (`fill` true) it's used inside a `relative` container with a
+ * fixed aspect ratio or grid span (matching Picture's
+ * `className="absolute inset-0"` convention), so `fill` needs no explicit
+ * width/height for CLS. Pass `fill={false}` for intrinsic sizing (e.g. a
+ * lightbox that shrinks the image to fit its own bounds) — this renders
+ * next/image with the Sanity asset's own metadata dimensions instead.
  */
 type SanityPictureProps = {
   image: SanityImageRef;
@@ -20,6 +21,7 @@ type SanityPictureProps = {
   priority?: boolean;
   className?: string;
   imgClassName?: string;
+  fill?: boolean;
 };
 
 export function SanityPicture({
@@ -29,11 +31,30 @@ export function SanityPicture({
   priority = false,
   className,
   imgClassName,
+  fill = true,
 }: SanityPictureProps) {
   if (!image.asset) return null;
 
   const src = urlFor(image).width(2000).auto("format").url();
   const lqip = image.asset.metadata?.lqip;
+  const dimensions = image.asset.metadata?.dimensions;
+
+  if (!fill) {
+    if (!dimensions?.width || !dimensions?.height) return null;
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={dimensions.width}
+        height={dimensions.height}
+        sizes={sizes}
+        placeholder={lqip ? "blur" : "empty"}
+        blurDataURL={lqip || undefined}
+        priority={priority}
+        className={cx(className, imgClassName)}
+      />
+    );
+  }
 
   return (
     <div className={className}>

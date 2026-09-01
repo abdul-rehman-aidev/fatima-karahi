@@ -24,8 +24,49 @@ export const MENU_QUERY = defineQuery(`
         price,
         priceTiers[]{ _key, label, price },
         spice,
-        signature
+        signature,
+        image{
+          asset->{
+            url,
+            metadata{ lqip, dimensions{ width, height } }
+          },
+          hotspot,
+          crop
+        },
+        featured,
+        featuredOrder
       }
+    }
+  }
+`);
+
+export const SITE_PHOTOS_QUERY = defineQuery(`
+  *[_id == "sitePhotos"][0]{
+    photos[]{
+      _key,
+      key,
+      caption,
+      image{
+        asset->{
+          url,
+          metadata{ lqip, dimensions{ width, height } }
+        },
+        alt,
+        hotspot,
+        crop
+      }
+    }
+  }
+`);
+
+export const CATERING_PACKAGES_QUERY = defineQuery(`
+  *[_id == "cateringPackages"][0]{
+    packages[]{
+      _key,
+      name,
+      pricePerPerson,
+      featured,
+      items
     }
   }
 `);

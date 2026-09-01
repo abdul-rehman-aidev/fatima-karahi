@@ -1,10 +1,11 @@
 import { Divider } from "@/components/ds/Divider";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
+import type { SitePhotoPool } from "@/sanity/types";
 
 const PANELS = [
-  { name: "hero-carousel-1", alt: "Fatima Karahi dining room and table spread" },
-  { name: "hero-carousel-2", alt: "Fatima Karahi dining room and table spread" },
-  { name: "hero-carousel-3", alt: "Fatima Karahi dining room and table spread" },
+  { key: "hero-carousel-1", alt: "Fatima Karahi dining room and table spread" },
+  { key: "hero-carousel-2", alt: "Fatima Karahi dining room and table spread" },
+  { key: "hero-carousel-3", alt: "Fatima Karahi dining room and table spread" },
 ];
 
 /**
@@ -13,27 +14,28 @@ const PANELS = [
  * Mobile drops to the first panel only, per the brief ("a single readable
  * image ... rather than cramming 3 panels edge-to-edge") — a CSS-only
  * `hidden lg:block` cut, not a conditional mount, since all three panels are
- * structurally identical <Picture> cells.
+ * structurally identical cells.
  */
-export function AboutHero() {
+export function AboutHero({ photoPool }: { photoPool: SitePhotoPool }) {
   return (
     <section className="relative grid min-h-[52svh] overflow-hidden bg-emerald-deep">
       <div className="absolute inset-0 grid grid-cols-1 lg:grid-cols-3">
-        {PANELS.map((panel, i) => (
-          <div key={panel.name} className={i === 0 ? "relative" : "relative hidden lg:block"}>
-            <Picture
-              name={panel.name}
-              alt={panel.alt}
-              widths={i === 0 ? [480, 640, 828, 1200] : [640, 828, 1200]}
-              sizes={i === 0 ? "100vw" : "33vw"}
-              width={1200}
-              height={1500}
-              priority={i === 0}
-              className="absolute inset-0"
-              imgClassName="h-full w-full object-cover"
-            />
-          </div>
-        ))}
+        {PANELS.map((panel, i) => {
+          const image = photoPool[panel.key]?.image;
+          if (!image?.asset) return null;
+          return (
+            <div key={panel.key} className={i === 0 ? "relative" : "relative hidden lg:block"}>
+              <SanityPicture
+                image={image}
+                alt={panel.alt}
+                sizes={i === 0 ? "100vw" : "33vw"}
+                priority={i === 0}
+                className="absolute inset-0"
+                imgClassName="h-full w-full object-cover"
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Same flat emerald-deep scrim used across the site for type over

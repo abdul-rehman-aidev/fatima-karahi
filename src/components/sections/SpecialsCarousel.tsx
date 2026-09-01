@@ -15,12 +15,12 @@ import type { MustTryDish } from "@/components/sections/mustTryDishes";
  * of them overflow the row even on desktop — that's what the dots below
  * are for.
  *
- * Photos are per menu SECTION now, not per dish (see data/menu.ts), so each
- * pick below is deliberately from a different category — otherwise two
- * cards could end up showing the exact same photo. Each pick also needs a
- * single `price` (not `priceTiers`): every dish in Chicken/Lamb/Goat Karahi
- * is weight-tiered, so none of those categories can be used here without
- * also redesigning the card's price display.
+ * Each card's photo is the dish's own Sanity image, falling back to its menu
+ * category's section photo if the dish has none set — two dishes from the
+ * same category with no photo of their own will show the same fallback.
+ * Each pick also needs a single `price` (not `priceTiers`): every dish in
+ * Chicken/Lamb/Goat Karahi is weight-tiered, so none of those categories can
+ * be used here without also redesigning the card's price display.
  *
  * Colour note: the brief for this section suggested #1A1A1A card panels and
  * a #7FA672 price accent. Both are outside the site's approved six-colour
@@ -133,9 +133,9 @@ function SpecialCard({ dish, index, total }: { dish: MustTryDish; index: number;
       className="group m-0 w-[82%] shrink-0 snap-start transition-transform duration-[var(--dur)] ease-[var(--ease-soft)] hover:scale-[1.025] sm:w-[46%] lg:w-[267px]"
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-t-card">
-        {dish.categoryImage && (
+        {dish.image && (
           <SanityPicture
-            image={dish.categoryImage}
+            image={dish.image}
             alt={dish.name}
             sizes="(min-width: 1024px) 267px, (min-width: 640px) 46vw, 82vw"
             className="absolute inset-0"

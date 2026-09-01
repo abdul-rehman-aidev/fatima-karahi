@@ -2,22 +2,19 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { HalalBadge } from "@/components/ds/HalalBadge";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
 import { CateringGallery } from "@/components/sections/CateringGallery";
 import { CateringPackages } from "@/components/sections/CateringPackages";
 import { CateringServiceOptions } from "@/components/sections/CateringServiceOptions";
 import { OccasionsCarousel } from "@/components/sections/OccasionsCarousel";
 import { QuoteForm } from "@/components/sections/QuoteForm";
-import {
-  cateringPackages,
-  cateringServiceOptions,
-  galleryTiles,
-  howItWorks,
-  occasions,
-} from "@/data/catering";
+import { cateringServiceOptions, galleryTiles, howItWorks, occasions } from "@/data/catering";
 import { site } from "@/data/site";
 import { BreadcrumbJsonLd } from "@/components/chrome/JsonLd";
+import { sanityFetch } from "@/sanity/live";
+import { CATERING_PACKAGES_QUERY, SITE_PHOTOS_QUERY } from "@/sanity/queries";
+import { buildSitePhotoPool } from "@/sanity/types";
 
 export const metadata: Metadata = {
   // SEO audit High #7 — this title also omitted "Edmonton" (flagged
@@ -28,22 +25,29 @@ export const metadata: Metadata = {
   alternates: { canonical: "/catering" },
 };
 
-export default function CateringPage() {
+export default async function CateringPage() {
+  const [{ data }, { data: packagesData }] = await Promise.all([
+    sanityFetch({ query: SITE_PHOTOS_QUERY }),
+    sanityFetch({ query: CATERING_PACKAGES_QUERY }),
+  ]);
+  const photoPool = buildSitePhotoPool(data?.photos);
+  const heroImage = photoPool["catering"]?.image;
+  const cateringPackages = packagesData?.packages ?? [];
+
   return (
     <>
       {/* HERO — dramatic emerald, with the one allowed truck-art stripe */}
       <section className="relative grid min-h-[62svh] items-center overflow-hidden bg-emerald pt-[84px]">
-        <Picture
-          name="catering"
-          alt="A catering spread laid for a daawat"
-          widths={[480, 828, 1200, 1600]}
-          sizes="100vw"
-          width={1600}
-          height={1200}
-          priority
-          className="absolute inset-0"
-          imgClassName="h-full w-full object-cover"
-        />
+        {heroImage?.asset && (
+          <SanityPicture
+            image={heroImage}
+            alt="A catering spread laid for a daawat"
+            sizes="100vw"
+            priority
+            className="absolute inset-0"
+            imgClassName="h-full w-full object-cover"
+          />
+        )}
         {/* Overlay stack — identical treatment to the homepage and menu
             heroes (HomeHero.tsx / menu/page.tsx): bottom-weighted darkening +
             centred spotlight + 4-corner vignette, layered above the image,
@@ -108,7 +112,7 @@ export default function CateringPage() {
       </section>
 
       {/* SERVICE OPTIONS — in-house vs. delivery/off-site, before anything else */}
-      <CateringServiceOptions options={cateringServiceOptions} />
+      <CateringServiceOptions options={cateringServiceOptions} photoPool={photoPool} />
 
       {/* OCCASIONS — editorial vignettes, staggered heights */}
       <section className="bg-emerald-deep py-section">
@@ -119,11 +123,11 @@ export default function CateringPage() {
               We cater the way Pakistan gathers
             </h2>
           </Reveal>
-          <OccasionsCarousel occasions={occasions} />
+          <OccasionsCarousel occasions={occasions} photoPool={photoPool} />
         </div>
       </section>
 
-      {/* CATERING PACKAGES — five set menus, client PDF pricing minus $5/head */}
+      {/* CATERING PACKAGES — set menus, managed in Sanity ("Catering Packages") */}
       <CateringPackages packages={cateringPackages} />
 
       {/* HOW IT WORKS — earned numbered steps, no icon row */}
@@ -162,7 +166,7 @@ export default function CateringPage() {
               plate.
             </p>
           </Reveal>
-          <CateringGallery tiles={galleryTiles} />
+          <CateringGallery tiles={galleryTiles} photoPool={photoPool} />
         </div>
       </section>
 

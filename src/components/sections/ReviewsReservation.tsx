@@ -1,12 +1,13 @@
 "use client";
 
 import { Divider } from "@/components/ds/Divider";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { QueryForm } from "@/components/sections/QueryForm";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { useReviewCarousel } from "@/lib/useReviewCarousel";
 import { cx } from "@/lib/cx";
 import { site } from "@/data/site";
+import type { SanityImageRef } from "@/sanity/types";
 
 /**
  * Replaces TrustBand's old single testimonial block. Two genuinely different
@@ -17,24 +18,31 @@ import { site } from "@/data/site";
  * background — so, same as MenuSection/CateringGallery elsewhere in this
  * codebase, one subtree is conditionally mounted rather than CSS-toggled.
  */
-export function ReviewsReservation() {
+export function ReviewsReservation({
+  backgroundImage,
+}: {
+  backgroundImage: SanityImageRef | undefined;
+}) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  return isDesktop ? <DesktopLayout /> : <MobileLayout />;
+  return isDesktop ? (
+    <DesktopLayout backgroundImage={backgroundImage} />
+  ) : (
+    <MobileLayout backgroundImage={backgroundImage} />
+  );
 }
 
-function BackgroundPhoto() {
+function BackgroundPhoto({ image }: { image: SanityImageRef | undefined }) {
   return (
     <>
-      <Picture
-        name="hero-carousel-1"
-        alt=""
-        widths={[480, 640, 828, 1200, 1920]}
-        sizes="100vw"
-        width={1920}
-        height={1280}
-        className="absolute inset-0"
-        imgClassName="h-full w-full object-cover"
-      />
+      {image?.asset && (
+        <SanityPicture
+          image={image}
+          alt=""
+          sizes="100vw"
+          className="absolute inset-0"
+          imgClassName="h-full w-full object-cover"
+        />
+      )}
       {/* Same flat emerald-deep scrim value used everywhere else in this
           codebase for type-over-photo (ParallaxStatement, the catering
           gallery's mobile cards) — the brief's "emerald-charcoal, not pure
@@ -47,11 +55,11 @@ function BackgroundPhoto() {
   );
 }
 
-function DesktopLayout() {
+function DesktopLayout({ backgroundImage }: { backgroundImage: SanityImageRef | undefined }) {
   return (
     <>
       <section className="relative isolate overflow-hidden">
-        <BackgroundPhoto />
+        <BackgroundPhoto image={backgroundImage} />
         {/* Fixed padding, not min-height + vertical centering: centering
             let the carousel's now-constant (but still substantial) height
             eat into the reserved overlap space below it, so the card's
@@ -73,11 +81,11 @@ function DesktopLayout() {
   );
 }
 
-function MobileLayout() {
+function MobileLayout({ backgroundImage }: { backgroundImage: SanityImageRef | undefined }) {
   return (
     <>
       <section className="relative overflow-hidden">
-        <BackgroundPhoto />
+        <BackgroundPhoto image={backgroundImage} />
         <div className="relative z-[1] px-[clamp(20px,5vw,56px)] py-[clamp(3rem,8vw,4rem)]">
           <TestimonialCarousel />
         </div>

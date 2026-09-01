@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
 import { cx } from "@/lib/cx";
+import type { SanityImageRef } from "@/sanity/types";
 
 /**
  * Full-width signature-dish banner with a centred play button. Clicking it
@@ -32,7 +33,7 @@ import { cx } from "@/lib/cx";
  * (not just optimistic state) so they stay correct if playback is ever
  * driven from outside these buttons (e.g. a hardware media key).
  */
-export function AboutVideoBanner() {
+export function AboutVideoBanner({ image }: { image: SanityImageRef | undefined }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -43,16 +44,15 @@ export function AboutVideoBanner() {
 
   return (
     <section className="relative h-[42vh] min-h-[320px] overflow-hidden bg-emerald-deep">
-      <Picture
-        name="food-karahi"
-        alt="Chicken karahi finishing in a cast-iron pan over open heat"
-        widths={[480, 828, 1200, 1600]}
-        sizes="100vw"
-        width={1600}
-        height={1200}
-        className="absolute inset-0"
-        imgClassName="h-full w-full object-cover"
-      />
+      {image?.asset && (
+        <SanityPicture
+          image={image}
+          alt="Chicken karahi finishing in a cast-iron pan over open heat"
+          sizes="100vw"
+          className="absolute inset-0"
+          imgClassName="h-full w-full object-cover"
+        />
+      )}
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[color-mix(in_srgb,var(--emerald-deep)_45%,transparent)]"

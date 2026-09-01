@@ -2,18 +2,27 @@ import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { OccasionCard } from "@/components/ds/OccasionCard";
 import { Reveal } from "@/components/motion/Reveal";
-import { cateringPackages, occasions } from "@/data/catering";
+import { occasions } from "@/data/catering";
 import { site } from "@/data/site";
+import type { CateringPackage, SitePhotoPool } from "@/sanity/types";
 
 /**
  * Catering spotlight — the money goal, pulled high on the page.
  * Ivory (conversion) zone; asymmetric occasion vignettes, one gold CTA.
  */
-export function CateringSpotlight() {
+export function CateringSpotlight({
+  photoPool,
+  packages,
+}: {
+  photoPool: SitePhotoPool;
+  packages: CateringPackage[];
+}) {
   const featured = occasions.filter((o) => o.id !== "community");
   // Occasions no longer carry their own placeholder pricing — the real
-  // number now comes from the cheapest catering package (Basic, $30/person).
-  const startingPrice = cateringPackages[0].pricePerPerson;
+  // number comes from the cheapest catering package, regardless of the
+  // display order editors set in Studio.
+  const startingPrice =
+    packages.length > 0 ? Math.min(...packages.map((p) => p.pricePerPerson)) : undefined;
 
   return (
     <section className="bg-ivory py-section text-ink">
@@ -32,7 +41,12 @@ export function CateringSpotlight() {
         <div className="grid grid-cols-1 gap-s4 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((o, i) => (
             <Reveal key={o.id} delay={i * 60} className={i % 2 === 1 ? "lg:mt-s7" : ""}>
-              <OccasionCard name={o.name} urdu={o.urdu} image={o.image} alt={`${o.name} catering`} />
+              <OccasionCard
+                name={o.name}
+                urdu={o.urdu}
+                image={photoPool[o.image]?.image}
+                alt={`${o.name} catering`}
+              />
             </Reveal>
           ))}
         </div>
@@ -42,7 +56,8 @@ export function CateringSpotlight() {
             Request a catering quote
           </Button>
           <span className="text-[0.9rem] text-stone">
-            Packages from ${startingPrice}/person · {site.replyPromise}
+            {startingPrice != null && <>Packages from ${startingPrice}/person · </>}
+            {site.replyPromise}
           </span>
         </Reveal>
       </div>

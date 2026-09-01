@@ -3,6 +3,7 @@ import { StatCounter } from "@/components/ds/StatCounter";
 import { Reveal } from "@/components/motion/Reveal";
 import { ReviewsReservation } from "@/components/sections/ReviewsReservation";
 import { site } from "@/data/site";
+import type { SanityImageRef } from "@/sanity/types";
 
 /**
  * Trust band — count-up numerals (never icon cards), unchanged. The old
@@ -11,7 +12,7 @@ import { site } from "@/data/site";
  * contact card) — kept as a sibling, not nested in this section's
  * max-w-content container, since it needs full-bleed width for its photo.
  */
-export function TrustBand() {
+export function TrustBand({ backgroundImage }: { backgroundImage: SanityImageRef | undefined }) {
   return (
     <>
       <section className="border-t-[0.5px] border-emerald-line bg-emerald pt-section pb-[clamp(3rem,6vw,4rem)]">
@@ -27,7 +28,7 @@ export function TrustBand() {
           </Reveal>
         </div>
       </section>
-      <ReviewsReservation />
+      <ReviewsReservation backgroundImage={backgroundImage} />
     </>
   );
 }

@@ -21,11 +21,12 @@ honest trade-off that decision carries.
   colour/font utilities that exist.
 - **Fonts** self-hosted via `next/font/local` (`src/app/fonts.ts`) — Fraunces,
   Hanken Grotesk, Gulzar (Urdu Nastaliq). No Google Fonts runtime requests.
-- **Images**: `output: export` disables Next's built-in image optimizer, so
-  `scripts/optimize-images.mjs` pre-generates AVIF/WebP/JPEG responsive
-  variants at build time (runs automatically via the `prebuild` script) from
-  `assets-src/*.jpg` into `public/img/`. `src/components/media/Picture.tsx`
-  serves them as a responsive `<picture>`.
+- **Images**: every content/marketing photo is managed in Sanity (the "Site
+  Photos" singleton, plus Menu section and Gallery photos) and rendered via
+  `next/image` through `src/components/media/SanityPicture.tsx`, which uses
+  Sanity's image CDN for on-the-fly resizing and format negotiation. Only
+  brand/UI assets (logo, halal badge icon, favicon) stay as static files in
+  `public/`.
 - **Forms** are static-export-safe: `src/lib/forms.ts` posts JSON to
   `NEXT_PUBLIC_FORM_ENDPOINT`. Until that's set, submissions simulate success
   locally (with a console warning) so the full success/error UI is testable
@@ -39,8 +40,8 @@ npm run dev      # http://localhost:3000
 ```
 
 ```bash
-npm run build    # runs the image pipeline, then next build → ./out
-npm run serve    # serve the static export locally on :4173
+npm run build
+npm run serve    # serve the production build locally on :4173
 ```
 
 ## The one thing to know about the JS budget
@@ -68,10 +69,10 @@ measurement methodology.
   nothing else in the app hard-codes these. `hasOrderUrl()` gates whether
   `/order` auto-redirects or shows the call/WhatsApp fallback, and whether the
   nav's "Order online" pill links out directly or to the `/order` interstitial.
-- **Photography** — drop a same-named, same-aspect-ratio JPEG into
-  `assets-src/` (see the `JOBS` map in `scripts/optimize-images.mjs` for the
-  required widths per image) and run `npm run images` (or just `npm run
-  build`, which runs it automatically).
+- **Photography** — upload/replace photos in Sanity Studio (`studio/`, run
+  `npm run dev` there): the "Site Photos" singleton for hero/about/catering
+  marketing photos, "Menu" for per-category section photos, and "Gallery" for
+  the photo grid. No rebuild needed — changes go live immediately.
 - **Form endpoint** — set `NEXT_PUBLIC_FORM_ENDPOINT` (e.g. a Formspree form
   URL) in `.env.local` or your host's environment variables. That's the whole
   integration; `src/lib/forms.ts` needs no other change.
@@ -100,9 +101,10 @@ src/app/            routes: / /menu /catering /contact /order, layout, sitemap, 
 src/components/ds/  the 11 design-system components (1:1 with design/components/)
 src/components/chrome/    SiteNav, SiteFooter, JSON-LD
 src/components/sections/  one component per page section
-src/components/media/     Picture (responsive AVIF/WebP)
+src/components/media/     SanityPicture (Sanity CDN images via next/image)
 src/components/motion/    Reveal (scroll-in fade+rise)
-src/data/           site.ts, menu.ts, catering.ts — all editable content
+src/data/           site.ts, catering.ts — hardcoded copy/labels (photos and Menu content live in Sanity)
 src/lib/            forms.ts (submission adapter), cx.ts
-scripts/            optimize-images.mjs (build-time), serve-compressed.mjs (local audit only)
+src/sanity/         Sanity client, GROQ queries, image-url builder
+scripts/            serve-compressed.mjs (local audit only)
 ```

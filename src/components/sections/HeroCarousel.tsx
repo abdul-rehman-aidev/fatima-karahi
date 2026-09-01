@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { preload } from "react-dom";
-import { Picture } from "@/components/media/Picture";
+import { useCallback, useEffect, useState } from "react";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { cx } from "@/lib/cx";
+import type { SanityImageRef } from "@/sanity/types";
 
-export type HeroCarouselImage = { name: string; alt: string };
+export type HeroCarouselImage = { key: string; alt: string; image: SanityImageRef };
 
 // Keep in sync with --hero-display-duration / --hero-transition-duration in
 // globals.css (kept as plain numbers here since the interval that drives the
@@ -13,7 +13,6 @@ export type HeroCarouselImage = { name: string; alt: string };
 const DISPLAY_MS = 5500;
 const TRANSITION_MS = 1800;
 const REDUCED_TRANSITION_MS = 300;
-const WIDTHS = [640, 828, 1200, 1920];
 
 /**
  * Full-bleed crossfade background for the hero. All slides are stacked
@@ -61,17 +60,6 @@ export function HeroCarousel({ images }: { images: HeroCarouselImage[] }) {
     return () => clearInterval(id);
   }, [paused, cycleMs, images.length]);
 
-  // Preload the next slide just ahead of when it's needed.
-  useEffect(() => {
-    const next = images[(activeIndex + 1) % images.length];
-    if (!next) return;
-    preload(`/img/${next.name}-1200.avif`, {
-      as: "image",
-      imageSrcSet: WIDTHS.map((w) => `/img/${next.name}-${w}.avif ${w}w`).join(", "),
-      imageSizes: "100vw",
-    });
-  }, [activeIndex, images]);
-
   return (
     <div
       className="absolute inset-0 z-[1] overflow-hidden"
@@ -81,7 +69,7 @@ export function HeroCarousel({ images }: { images: HeroCarouselImage[] }) {
         const isActive = i === activeIndex;
         return (
           <div
-            key={img.name}
+            key={img.key}
             aria-hidden={!isActive}
             className="absolute inset-0"
             style={{
@@ -96,14 +84,11 @@ export function HeroCarousel({ images }: { images: HeroCarouselImage[] }) {
               className={cx("h-full w-full", isActive && !reducedMotion && "hero-kenburns")}
               style={isActive && !reducedMotion ? { animationDuration: `${cycleMs}ms` } : undefined}
             >
-              <Picture
-                name={img.name}
+              <SanityPicture
+                image={img.image}
                 alt={img.alt}
-                widths={WIDTHS}
                 sizes="100vw"
-                width={1920}
-                height={1200}
-                priority={i === 0}
+                priority={i <= 1}
                 className="h-full w-full"
                 imgClassName="h-full w-full object-cover object-center [filter:brightness(0.88)_saturate(1.05)]"
               />
@@ -120,7 +105,7 @@ export function HeroCarousel({ images }: { images: HeroCarouselImage[] }) {
         >
           {images.map((img, i) => (
             <button
-              key={img.name}
+              key={img.key}
               type="button"
               role="tab"
               aria-selected={i === activeIndex}

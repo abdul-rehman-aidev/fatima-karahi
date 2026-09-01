@@ -1,26 +1,24 @@
 import type { Dish, MenuCategory, MenuSectionImage } from "@/sanity/types";
 
 /**
- * "Must Try" pick list for the homepage carousel — a curated 5-dish rail
- * (not "whatever happens to be signature"). Kept in its own plain module
- * (no "use client") so it can be called from the server component that
- * fetches the menu — SpecialsCarousel.tsx is a client component, and a
- * function exported from a "use client" file can't be invoked server-side.
+ * "Must Try" pick list for the homepage carousel — a curated dish rail
+ * (not "whatever happens to be signature"). Curation now lives in Sanity:
+ * editors tick "Featured on homepage" on a dish and set "Featured order" to
+ * control its position in the rail. Kept in its own plain module (no
+ * "use client") so it can be called from the server component that fetches
+ * the menu — SpecialsCarousel.tsx is a client component, and a function
+ * exported from a "use client" file can't be invoked server-side.
  */
-const MUST_TRY_NAMES = ["Beef Nehari", "Chapli Kebab", "Khoya Kheer", "Chicken Biryani", "Chicken Wings"];
-
-export type MustTryDish = Dish & { categoryImage?: MenuSectionImage | null };
+export type MustTryDish = Omit<Dish, "image"> & { image?: MenuSectionImage | null };
 
 export function pickMustTryDishes(categories: MenuCategory[]): MustTryDish[] {
   const dishes: MustTryDish[] = [];
-  for (const name of MUST_TRY_NAMES) {
-    for (const category of categories) {
-      const dish = category.dishes?.find((d) => d.name === name);
-      if (dish) {
-        dishes.push({ ...dish, categoryImage: category.sectionImage });
-        break;
-      }
+  for (const category of categories) {
+    for (const dish of category.dishes ?? []) {
+      // A dish's own photo wins; the category's section photo is only a
+      // fallback for dishes featured before anyone uploaded one.
+      if (dish.featured) dishes.push({ ...dish, image: dish.image ?? category.sectionImage });
     }
   }
-  return dishes;
+  return dishes.sort((a, b) => (a.featuredOrder ?? Infinity) - (b.featuredOrder ?? Infinity));
 }

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
 import type { CateringServiceOption } from "@/data/catering";
+import type { SanityImageRef, SitePhotoPool } from "@/sanity/types";
 
 /**
  * The two ways to cater with us, up top before anything else — packages,
@@ -13,7 +14,13 @@ import type { CateringServiceOption } from "@/data/catering";
  * service works for you?") is what actually records the choice, so this
  * section doesn't need its own separate form.
  */
-export function CateringServiceOptions({ options }: { options: CateringServiceOption[] }) {
+export function CateringServiceOptions({
+  options,
+  photoPool,
+}: {
+  options: CateringServiceOption[];
+  photoPool: SitePhotoPool;
+}) {
   return (
     <section className="bg-ivory py-section text-ink">
       <div className="mx-auto max-w-content px-[clamp(20px,5vw,56px)]">
@@ -33,7 +40,7 @@ export function CateringServiceOptions({ options }: { options: CateringServiceOp
         <div className="grid grid-cols-1 gap-s6 sm:grid-cols-2">
           {options.map((option, i) => (
             <Reveal key={option.id} delay={i * 80}>
-              <ServiceCard option={option} />
+              <ServiceCard option={option} image={photoPool[option.image]?.image} />
             </Reveal>
           ))}
         </div>
@@ -42,20 +49,25 @@ export function CateringServiceOptions({ options }: { options: CateringServiceOp
   );
 }
 
-function ServiceCard({ option }: { option: CateringServiceOption }) {
+function ServiceCard({
+  option,
+  image,
+}: {
+  option: CateringServiceOption;
+  image: SanityImageRef | undefined;
+}) {
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-card border border-[color-mix(in_srgb,var(--stone)_14%,transparent)] bg-cream shadow-card">
       <div className="relative aspect-[16/10] w-full overflow-hidden">
-        <Picture
-          name={option.image}
-          alt={option.heading}
-          widths={[480, 828, 1200]}
-          sizes="(min-width: 640px) 50vw, 100vw"
-          width={1200}
-          height={1500}
-          className="absolute inset-0"
-          imgClassName="h-full w-full object-cover"
-        />
+        {image?.asset && (
+          <SanityPicture
+            image={image}
+            alt={option.heading}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            className="absolute inset-0"
+            imgClassName="h-full w-full object-cover"
+          />
+        )}
       </div>
       <div className="flex flex-1 flex-col p-s6">
         <h3 className="m-0 font-display text-[1.4rem] leading-[1.15] text-ink">{option.heading}</h3>

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
 import { MenuCategoryNav } from "@/components/sections/MenuCategoryNav";
 import { MenuSection } from "@/components/sections/MenuSection";
 import { BreadcrumbJsonLd, MenuJsonLd } from "@/components/chrome/JsonLd";
 import { sanityFetch } from "@/sanity/live";
-import { MENU_QUERY } from "@/sanity/queries";
+import { MENU_QUERY, SITE_PHOTOS_QUERY } from "@/sanity/queries";
+import { buildSitePhotoPool } from "@/sanity/types";
 import { hasOrderUrl, site } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -18,8 +19,13 @@ export const metadata: Metadata = {
 };
 
 export default async function MenuPage() {
-  const { data } = await sanityFetch({ query: MENU_QUERY });
+  const [{ data }, { data: sitePhotosData }] = await Promise.all([
+    sanityFetch({ query: MENU_QUERY }),
+    sanityFetch({ query: SITE_PHOTOS_QUERY }),
+  ]);
   const menu = data?.categories ?? [];
+  const photoPool = buildSitePhotoPool(sitePhotosData?.photos);
+  const heroImage = photoPool["food-nihari"]?.image;
   const orderHref = hasOrderUrl() ? site.orderUrl : "/order";
   const orderExternal = hasOrderUrl();
 
@@ -27,17 +33,16 @@ export default async function MenuPage() {
     <>
       {/* Compact emerald hero */}
       <section className="relative overflow-hidden bg-emerald pb-[clamp(3rem,6vw,4.5rem)] pt-[calc(84px+clamp(2.5rem,6vw,4rem))]">
-        <Picture
-          name="food-nihari"
-          alt=""
-          widths={[480, 828, 1200]}
-          sizes="100vw"
-          width={1200}
-          height={1500}
-          priority
-          className="absolute inset-0"
-          imgClassName="h-full w-full object-cover"
-        />
+        {heroImage?.asset && (
+          <SanityPicture
+            image={heroImage}
+            alt=""
+            sizes="100vw"
+            priority
+            className="absolute inset-0"
+            imgClassName="h-full w-full object-cover"
+          />
+        )}
 
         {/* Overlay stack — identical treatment to the homepage hero
             (HomeHero.tsx): bottom-weighted darkening + centred spotlight +

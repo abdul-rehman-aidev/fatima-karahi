@@ -2,15 +2,16 @@ import { Button } from "@/components/ds/Button";
 import { HalalBadge } from "@/components/ds/HalalBadge";
 import { HeroCarousel } from "@/components/sections/HeroCarousel";
 import { hasOrderUrl, site } from "@/data/site";
+import type { SitePhotoPool } from "@/sanity/types";
 
 // SEO audit Medium #8: all four slides shared one identical, generic alt
 // string ("Fatima Karahi dining room and table spread") — none of them
 // actually show a dining room. Each is now described from the real photo.
 const HERO_IMAGES = [
-  { name: "hero-carousel-1", alt: "Beef karahi simmering in a cast-iron pan, garnished with coriander and green chilies" },
-  { name: "hero-carousel-2", alt: "Whole roasted lamb leg served over spiced Pakistani rice with almonds and raisins" },
-  { name: "hero-carousel-3", alt: "Charcoal-grilled tandoori chicken and seekh kebabs fresh off the grill" },
-  { name: "hero-carousel-4", alt: "Chicken tikka boti served over fragrant Pakistani rice" },
+  { key: "hero-carousel-1", alt: "Beef karahi simmering in a cast-iron pan, garnished with coriander and green chilies" },
+  { key: "hero-carousel-2", alt: "Whole roasted lamb leg served over spiced Pakistani rice with almonds and raisins" },
+  { key: "hero-carousel-3", alt: "Charcoal-grilled tandoori chicken and seekh kebabs fresh off the grill" },
+  { key: "hero-carousel-4", alt: "Chicken tikka boti served over fragrant Pakistani rice" },
 ];
 
 /**
@@ -19,13 +20,18 @@ const HERO_IMAGES = [
  * (doesn't fade with the images) so text contrast holds regardless of which
  * photo is showing.
  */
-export function HomeHero() {
+export function HomeHero({ photoPool }: { photoPool: SitePhotoPool }) {
   const orderHref = hasOrderUrl() ? site.orderUrl : "/order";
   const orderExternal = hasOrderUrl();
 
+  const heroImages = HERO_IMAGES.flatMap((h) => {
+    const image = photoPool[h.key]?.image;
+    return image?.asset ? [{ key: h.key, alt: h.alt, image }] : [];
+  });
+
   return (
     <section className="relative grid min-h-[100svh] items-center overflow-hidden bg-emerald">
-      <HeroCarousel images={HERO_IMAGES} />
+      <HeroCarousel images={heroImages} />
 
       {/* Darkening overlay — static, weighted toward the bottom two-thirds
           where the body copy, tagline row, and buttons sit */}

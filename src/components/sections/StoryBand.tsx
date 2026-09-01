@@ -1,10 +1,11 @@
 import { Button } from "@/components/ds/Button";
 import { Eyebrow } from "@/components/ds/Eyebrow";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
+import type { SanityImageRef } from "@/sanity/types";
 
 /** Lahore → Calgary → Edmonton — a large pull-quote band, not a text block. */
-export function StoryBand() {
+export function StoryBand({ image }: { image: SanityImageRef | undefined }) {
   return (
     <section className="relative overflow-hidden bg-emerald-deep py-section">
       <div aria-hidden="true" className="jali absolute inset-0" />
@@ -30,16 +31,15 @@ export function StoryBand() {
         </Reveal>
 
         <Reveal delay={120} className="relative h-[300px] overflow-hidden rounded-card shadow-lift sm:h-[420px]">
-          <Picture
-            name="food-spread"
-            alt="A full Lahori dastarkhwan laid for a daawat"
-            widths={[480, 828, 1200, 1600]}
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            width={1600}
-            height={1200}
-            className="absolute inset-0"
-            imgClassName="h-full w-full object-cover"
-          />
+          {image?.asset && (
+            <SanityPicture
+              image={image}
+              alt="A full Lahori dastarkhwan laid for a daawat"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="absolute inset-0"
+              imgClassName="h-full w-full object-cover"
+            />
+          )}
         </Reveal>
       </div>
     </section>

@@ -1,6 +1,6 @@
 [
   {
-    "name": "galleryQuoteTile",
+    "name": "cateringPackage",
     "type": "type",
     "value": {
       "type": "object",
@@ -9,40 +9,39 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "galleryQuoteTile"
+            "value": "cateringPackage"
           }
         },
-        "text": {
+        "name": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
-        "role": {
+        "pricePerPerson": {
           "type": "objectAttribute",
           "value": {
-            "type": "union",
-            "of": [
-              {
-                "type": "string",
-                "value": "feature"
-              },
-              {
-                "type": "string",
-                "value": "wide"
-              },
-              {
-                "type": "string",
-                "value": "tall"
-              },
-              {
-                "type": "string",
-                "value": "normal"
-              }
-            ]
+            "type": "number"
           },
-          "optional": false
+          "optional": true
+        },
+        "featured": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "items": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "array",
+            "of": {
+              "type": "string"
+            }
+          },
+          "optional": true
         }
       }
     }
@@ -75,6 +74,257 @@
         }
       },
       "dereferencesTo": "sanity.imageAsset"
+    }
+  },
+  {
+    "name": "sitePhoto",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sitePhoto"
+          }
+        },
+        "key": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "hero-carousel-1"
+              },
+              {
+                "type": "string",
+                "value": "hero-carousel-2"
+              },
+              {
+                "type": "string",
+                "value": "hero-carousel-3"
+              },
+              {
+                "type": "string",
+                "value": "hero-carousel-4"
+              },
+              {
+                "type": "string",
+                "value": "founder"
+              },
+              {
+                "type": "string",
+                "value": "food-bbq"
+              },
+              {
+                "type": "string",
+                "value": "food-karahi"
+              },
+              {
+                "type": "string",
+                "value": "food-nihari"
+              },
+              {
+                "type": "string",
+                "value": "food-spread"
+              },
+              {
+                "type": "string",
+                "value": "catering"
+              },
+              {
+                "type": "string",
+                "value": "parallax"
+              },
+              {
+                "type": "string",
+                "value": "must-try-4"
+              },
+              {
+                "type": "string",
+                "value": "occasion-corporate-lunch"
+              },
+              {
+                "type": "string",
+                "value": "occasion-walima"
+              },
+              {
+                "type": "string",
+                "value": "occasion-mehndi"
+              },
+              {
+                "type": "string",
+                "value": "occasion-daawat"
+              },
+              {
+                "type": "string",
+                "value": "occasion-community-mosque"
+              },
+              {
+                "type": "string",
+                "value": "occasion-dinner-party"
+              },
+              {
+                "type": "string",
+                "value": "occasion-birthday-party"
+              },
+              {
+                "type": "string",
+                "value": "occasion-anniversary"
+              },
+              {
+                "type": "string",
+                "value": "occasion-corporate-events"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "image": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "object",
+            "attributes": {
+              "asset": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageAsset.reference"
+                },
+                "optional": true
+              },
+              "media": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "unknown"
+                },
+                "optional": true
+              },
+              "hotspot": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageHotspot"
+                },
+                "optional": true
+              },
+              "crop": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageCrop"
+                },
+                "optional": true
+              },
+              "alt": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "image"
+                }
+              }
+            }
+          },
+          "optional": true
+        },
+        "caption": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tag": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "hero"
+              },
+              {
+                "type": "string",
+                "value": "food"
+              },
+              {
+                "type": "string",
+                "value": "occasion"
+              },
+              {
+                "type": "string",
+                "value": "people"
+              },
+              {
+                "type": "string",
+                "value": "venue"
+              },
+              {
+                "type": "string",
+                "value": "moment"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "galleryQuoteTile",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "galleryQuoteTile"
+          }
+        },
+        "text": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "role": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "feature"
+              },
+              {
+                "type": "string",
+                "value": "wide"
+              },
+              {
+                "type": "string",
+                "value": "tall"
+              },
+              {
+                "type": "string",
+                "value": "normal"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
     }
   },
   {
@@ -131,7 +381,7 @@
                 "value": {
                   "type": "string"
                 },
-                "optional": false
+                "optional": true
               },
               "_type": {
                 "type": "objectAttribute",
@@ -142,7 +392,7 @@
               }
             }
           },
-          "optional": false
+          "optional": true
         },
         "role": {
           "type": "objectAttribute",
@@ -167,7 +417,7 @@
               }
             ]
           },
-          "optional": false
+          "optional": true
         }
       }
     }
@@ -190,14 +440,14 @@
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
         "price": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": false
+          "optional": true
         }
       }
     }
@@ -220,7 +470,7 @@
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
         "urdu": {
           "type": "objectAttribute",
@@ -296,6 +546,67 @@
             "type": "boolean"
           },
           "optional": true
+        },
+        "image": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "object",
+            "attributes": {
+              "asset": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageAsset.reference"
+                },
+                "optional": true
+              },
+              "media": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "unknown"
+                },
+                "optional": true
+              },
+              "hotspot": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageHotspot"
+                },
+                "optional": true
+              },
+              "crop": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "inline",
+                  "name": "sanity.imageCrop"
+                },
+                "optional": true
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "image"
+                }
+              }
+            }
+          },
+          "optional": true
+        },
+        "featured": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        },
+        "featuredOrder": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
         }
       }
     }
@@ -318,21 +629,21 @@
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
         "label": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
         "urdu": {
           "type": "objectAttribute",
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
         "note": {
           "type": "objectAttribute",
@@ -407,6 +718,212 @@
                 "name": "dish"
               }
             }
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "cateringPackages",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "cateringPackages"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "packages": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "cateringPackage"
+            }
+          }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "sitePhotos",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "sitePhotos"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "photos": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "sitePhoto"
+            }
+          }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "sanity.imageCrop",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imageCrop"
+          }
+        },
+        "top": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "bottom": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "left": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "right": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "sanity.imageHotspot",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "sanity.imageHotspot"
+          }
+        },
+        "x": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "y": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "height": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "width": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
           },
           "optional": true
         }
@@ -489,94 +1006,6 @@
           }
         },
         "optional": true
-      }
-    }
-  },
-  {
-    "name": "sanity.imageCrop",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "sanity.imageCrop"
-          }
-        },
-        "top": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        },
-        "bottom": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        },
-        "left": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        },
-        "right": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        }
-      }
-    }
-  },
-  {
-    "name": "sanity.imageHotspot",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "sanity.imageHotspot"
-          }
-        },
-        "x": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        },
-        "y": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        },
-        "height": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        },
-        "width": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "number"
-          },
-          "optional": false
-        }
       }
     }
   },
@@ -773,21 +1202,21 @@
           "value": {
             "type": "number"
           },
-          "optional": false
+          "optional": true
         },
         "width": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": false
+          "optional": true
         },
         "aspectRatio": {
           "type": "objectAttribute",
           "value": {
             "type": "number"
           },
-          "optional": false
+          "optional": true
         }
       }
     }
@@ -942,35 +1371,35 @@
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "extension": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "mimeType": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "size": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": false
+        "optional": true
       },
       "assetId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "uploadId": {
         "type": "objectAttribute",
@@ -984,14 +1413,14 @@
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "url": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "source": {
         "type": "objectAttribute",
@@ -1115,35 +1544,35 @@
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "extension": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "mimeType": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "size": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
         },
-        "optional": false
+        "optional": true
       },
       "assetId": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "uploadId": {
         "type": "objectAttribute",
@@ -1157,14 +1586,14 @@
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "url": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": false
+        "optional": true
       },
       "metadata": {
         "type": "objectAttribute",
@@ -1239,7 +1668,7 @@
           "value": {
             "type": "string"
           },
-          "optional": false
+          "optional": true
         },
         "source": {
           "type": "objectAttribute",

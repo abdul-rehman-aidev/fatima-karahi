@@ -15,10 +15,12 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
-export type GalleryQuoteTile = {
-  _type: "galleryQuoteTile";
-  text: string;
-  role: "feature" | "wide" | "tall" | "normal";
+export type CateringPackage = {
+  _type: "cateringPackage";
+  name?: string;
+  pricePerPerson?: number;
+  featured?: boolean;
+  items?: Array<string>;
 };
 
 export type SanityImageAssetReference = {
@@ -28,28 +30,70 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
-export type GalleryPhotoTile = {
-  _type: "galleryPhotoTile";
-  image: {
+export type SitePhoto = {
+  _type: "sitePhoto";
+  key?:
+    | "hero-carousel-1"
+    | "hero-carousel-2"
+    | "hero-carousel-3"
+    | "hero-carousel-4"
+    | "founder"
+    | "food-bbq"
+    | "food-karahi"
+    | "food-nihari"
+    | "food-spread"
+    | "catering"
+    | "parallax"
+    | "must-try-4"
+    | "occasion-corporate-lunch"
+    | "occasion-walima"
+    | "occasion-mehndi"
+    | "occasion-daawat"
+    | "occasion-community-mosque"
+    | "occasion-dinner-party"
+    | "occasion-birthday-party"
+    | "occasion-anniversary"
+    | "occasion-corporate-events";
+  image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt: string;
+    alt?: string;
     _type: "image";
   };
-  role: "feature" | "wide" | "tall" | "normal";
+  caption?: string;
+  tag?: "hero" | "food" | "occasion" | "people" | "venue" | "moment";
+};
+
+export type GalleryQuoteTile = {
+  _type: "galleryQuoteTile";
+  text?: string;
+  role?: "feature" | "wide" | "tall" | "normal";
+};
+
+export type GalleryPhotoTile = {
+  _type: "galleryPhotoTile";
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  role?: "feature" | "wide" | "tall" | "normal";
 };
 
 export type PriceTier = {
   _type: "priceTier";
-  label: string;
-  price: number;
+  label?: string;
+  price?: number;
 };
 
 export type Dish = {
   _type: "dish";
-  name: string;
+  name?: string;
   urdu?: string;
   desc?: string;
   price?: number;
@@ -60,13 +104,22 @@ export type Dish = {
   >;
   spice?: 0 | 1 | 2 | 3;
   signature?: boolean;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  featured?: boolean;
+  featuredOrder?: number;
 };
 
 export type MenuCategory = {
   _type: "menuCategory";
-  categoryId: string;
-  label: string;
-  urdu: string;
+  categoryId?: string;
+  label?: string;
+  urdu?: string;
   note?: string;
   sectionImage?: {
     asset?: SanityImageAssetReference;
@@ -80,6 +133,48 @@ export type MenuCategory = {
       _key: string;
     } & Dish
   >;
+};
+
+export type CateringPackages = {
+  _id: string;
+  _type: "cateringPackages";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  packages?: Array<
+    {
+      _key: string;
+    } & CateringPackage
+  >;
+};
+
+export type SitePhotos = {
+  _id: string;
+  _type: "sitePhotos";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  photos?: Array<
+    {
+      _key: string;
+    } & SitePhoto
+  >;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
 };
 
 export type GalleryPage = {
@@ -96,22 +191,6 @@ export type GalleryPage = {
         _key: string;
       } & GalleryQuoteTile)
   >;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
 };
 
 export type Menu = {
@@ -148,9 +227,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height: number;
-  width: number;
-  aspectRatio: number;
+  height?: number;
+  width?: number;
+  aspectRatio?: number;
 };
 
 export type SanityImageMetadata = {
@@ -176,14 +255,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash: string;
-  extension: string;
-  mimeType: string;
-  size: number;
-  assetId: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
   uploadId?: string;
-  path: string;
-  url: string;
+  path?: string;
+  url?: string;
   source?: SanityAssetSourceData;
 };
 
@@ -205,14 +284,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash: string;
-  extension: string;
-  mimeType: string;
-  size: number;
-  assetId: string;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
   uploadId?: string;
-  path: string;
-  url: string;
+  path?: string;
+  url?: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -226,20 +305,24 @@ export type Geopoint = {
 
 export type Slug = {
   _type: "slug";
-  current: string;
+  current?: string;
   source?: string;
 };
 
 export type AllSanitySchemaTypes =
-  | GalleryQuoteTile
+  | CateringPackage
   | SanityImageAssetReference
+  | SitePhoto
+  | GalleryQuoteTile
   | GalleryPhotoTile
   | PriceTier
   | Dish
   | MenuCategory
-  | GalleryPage
+  | CateringPackages
+  | SitePhotos
   | SanityImageCrop
   | SanityImageHotspot
+  | GalleryPage
   | Menu
   | SanityImagePaletteSwatch
   | SanityImagePalette
@@ -253,7 +336,7 @@ export type AllSanitySchemaTypes =
 
 // Source: ../src/sanity/queries.ts
 // Variable: MENU_QUERY
-// Query: *[_id == "menu"][0]{    categories[]{      _key,      categoryId,      label,      urdu,      note,      sectionImage{        asset->{          url,          metadata{ lqip, dimensions{ width, height } }        },        hotspot,        crop      },      dishes[]{        _key,        name,        urdu,        desc,        price,        priceTiers[]{ _key, label, price },        spice,        signature      }    }  }
+// Query: *[_id == "menu"][0]{    categories[]{      _key,      categoryId,      label,      urdu,      note,      sectionImage{        asset->{          url,          metadata{ lqip, dimensions{ width, height } }        },        hotspot,        crop      },      dishes[]{        _key,        name,        urdu,        desc,        price,        priceTiers[]{ _key, label, price },        spice,        signature,        image{          asset->{            url,            metadata{ lqip, dimensions{ width, height } }          },          hotspot,          crop        },        featured,        featuredOrder      }    }  }
 export type MENU_QUERY_RESULT =
   | {
       categories: null;
@@ -261,18 +344,18 @@ export type MENU_QUERY_RESULT =
   | {
       categories: Array<{
         _key: string;
-        categoryId: string;
-        label: string;
-        urdu: string;
+        categoryId: string | null;
+        label: string | null;
+        urdu: string | null;
         note: string | null;
         sectionImage: {
           asset: {
-            url: string;
+            url: string | null;
             metadata: {
               lqip: string | null;
               dimensions: {
-                width: number;
-                height: number;
+                width: number | null;
+                height: number | null;
               } | null;
             } | null;
           } | null;
@@ -281,18 +364,105 @@ export type MENU_QUERY_RESULT =
         } | null;
         dishes: Array<{
           _key: string;
-          name: string;
+          name: string | null;
           urdu: string | null;
           desc: string | null;
           price: number | null;
           priceTiers: Array<{
             _key: string;
-            label: string;
-            price: number;
+            label: string | null;
+            price: number | null;
           }> | null;
           spice: 0 | 1 | 2 | 3 | null;
           signature: boolean | null;
+          image: {
+            asset: {
+              url: string | null;
+              metadata: {
+                lqip: string | null;
+                dimensions: {
+                  width: number | null;
+                  height: number | null;
+                } | null;
+              } | null;
+            } | null;
+            hotspot: SanityImageHotspot | null;
+            crop: SanityImageCrop | null;
+          } | null;
+          featured: boolean | null;
+          featuredOrder: number | null;
         }> | null;
+      }> | null;
+    }
+  | null;
+
+// Source: ../src/sanity/queries.ts
+// Variable: SITE_PHOTOS_QUERY
+// Query: *[_id == "sitePhotos"][0]{    photos[]{      _key,      key,      caption,      image{        asset->{          url,          metadata{ lqip, dimensions{ width, height } }        },        alt,        hotspot,        crop      }    }  }
+export type SITE_PHOTOS_QUERY_RESULT =
+  | {
+      photos: null;
+    }
+  | {
+      photos: Array<{
+        _key: string;
+        key:
+          | "catering"
+          | "food-bbq"
+          | "food-karahi"
+          | "food-nihari"
+          | "food-spread"
+          | "founder"
+          | "hero-carousel-1"
+          | "hero-carousel-2"
+          | "hero-carousel-3"
+          | "hero-carousel-4"
+          | "must-try-4"
+          | "occasion-anniversary"
+          | "occasion-birthday-party"
+          | "occasion-community-mosque"
+          | "occasion-corporate-events"
+          | "occasion-corporate-lunch"
+          | "occasion-daawat"
+          | "occasion-dinner-party"
+          | "occasion-mehndi"
+          | "occasion-walima"
+          | "parallax"
+          | null;
+        caption: string | null;
+        image: {
+          asset: {
+            url: string | null;
+            metadata: {
+              lqip: string | null;
+              dimensions: {
+                width: number | null;
+                height: number | null;
+              } | null;
+            } | null;
+          } | null;
+          alt: string | null;
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+        } | null;
+      }> | null;
+    }
+  | null;
+
+// Source: ../src/sanity/queries.ts
+// Variable: CATERING_PACKAGES_QUERY
+// Query: *[_id == "cateringPackages"][0]{    packages[]{      _key,      name,      pricePerPerson,      featured,      items    }  }
+export type CATERING_PACKAGES_QUERY_RESULT =
+  | {
+      packages: null;
+    }
+  | {
+      packages: Array<{
+        _key: string;
+        name: string | null;
+        pricePerPerson: number | null;
+        featured: boolean | null;
+        items: Array<string> | null;
       }> | null;
     }
   | null;
@@ -309,28 +479,28 @@ export type GALLERY_QUERY_RESULT =
         | {
             _key: string;
             _type: "galleryPhotoTile";
-            role: "feature" | "normal" | "tall" | "wide";
+            role: "feature" | "normal" | "tall" | "wide" | null;
             image: {
               asset: {
-                url: string;
+                url: string | null;
                 metadata: {
                   lqip: string | null;
                   dimensions: {
-                    width: number;
-                    height: number;
+                    width: number | null;
+                    height: number | null;
                   } | null;
                 } | null;
               } | null;
-              alt: string;
+              alt: string | null;
               hotspot: SanityImageHotspot | null;
               crop: SanityImageCrop | null;
-            };
+            } | null;
           }
         | {
             _key: string;
             _type: "galleryQuoteTile";
-            role: "feature" | "normal" | "tall" | "wide";
-            text: string;
+            role: "feature" | "normal" | "tall" | "wide" | null;
+            text: string | null;
           }
       > | null;
     }
@@ -340,7 +510,9 @@ export type GALLERY_QUERY_RESULT =
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '\n  *[_id == "menu"][0]{\n    categories[]{\n      _key,\n      categoryId,\n      label,\n      urdu,\n      note,\n      sectionImage{\n        asset->{\n          url,\n          metadata{ lqip, dimensions{ width, height } }\n        },\n        hotspot,\n        crop\n      },\n      dishes[]{\n        _key,\n        name,\n        urdu,\n        desc,\n        price,\n        priceTiers[]{ _key, label, price },\n        spice,\n        signature\n      }\n    }\n  }\n': MENU_QUERY_RESULT;
+    '\n  *[_id == "menu"][0]{\n    categories[]{\n      _key,\n      categoryId,\n      label,\n      urdu,\n      note,\n      sectionImage{\n        asset->{\n          url,\n          metadata{ lqip, dimensions{ width, height } }\n        },\n        hotspot,\n        crop\n      },\n      dishes[]{\n        _key,\n        name,\n        urdu,\n        desc,\n        price,\n        priceTiers[]{ _key, label, price },\n        spice,\n        signature,\n        image{\n          asset->{\n            url,\n            metadata{ lqip, dimensions{ width, height } }\n          },\n          hotspot,\n          crop\n        },\n        featured,\n        featuredOrder\n      }\n    }\n  }\n': MENU_QUERY_RESULT;
+    '\n  *[_id == "sitePhotos"][0]{\n    photos[]{\n      _key,\n      key,\n      caption,\n      image{\n        asset->{\n          url,\n          metadata{ lqip, dimensions{ width, height } }\n        },\n        alt,\n        hotspot,\n        crop\n      }\n    }\n  }\n': SITE_PHOTOS_QUERY_RESULT;
+    '\n  *[_id == "cateringPackages"][0]{\n    packages[]{\n      _key,\n      name,\n      pricePerPerson,\n      featured,\n      items\n    }\n  }\n': CATERING_PACKAGES_QUERY_RESULT;
     '\n  *[_id == "galleryPage"][0]{\n    tiles[]{\n      _key,\n      _type,\n      _type == "galleryPhotoTile" => {\n        role,\n        image{\n          asset->{\n            url,\n            metadata{ lqip, dimensions{ width, height } }\n          },\n          alt,\n          hotspot,\n          crop\n        }\n      },\n      _type == "galleryQuoteTile" => {\n        role,\n        text\n      }\n    }\n  }\n': GALLERY_QUERY_RESULT;
   }
 }

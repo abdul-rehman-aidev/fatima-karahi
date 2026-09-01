@@ -1,10 +1,12 @@
 import type { CSSProperties } from "react";
+import type { ImageFormat } from "@sanity/image-url";
 import { Button } from "@/components/ds/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import { urlFor } from "@/sanity/image";
+import type { SanityImageRef } from "@/sanity/types";
 
 type ParallaxStatementProps = {
-  /** base name in public/img, e.g. "parallax" — must have a -1920 JPEG variant */
-  image: string;
+  image: SanityImageRef | undefined;
   heading: string;
   supportingLine?: string;
   /** optional internal link to the page this moment is about (e.g. catering) */
@@ -43,7 +45,8 @@ type ParallaxStatementProps = {
  * is decorative (the copy carries the meaning), so it's `aria-hidden` with
  * no alt text needed. Format fallback (AVIF → WebP → JPEG) is handled by
  * `.parallax-bg` in globals.css via `image-set()`, fed by the three
- * `--parallax-*` custom properties set below — see that rule's comment.
+ * `--parallax-*` custom properties set below, each a Sanity CDN URL for the
+ * same 1920x1000 crop in a different format — see that rule's comment.
  */
 export function ParallaxStatement({
   image,
@@ -52,14 +55,21 @@ export function ParallaxStatement({
   ctaLabel,
   ctaHref,
 }: ParallaxStatementProps) {
+  // @sanity/image-url's ImageFormat type predates "avif" support, but the
+  // CDN accepts it as an `fm` value regardless — cast past the stale union.
+  const crop = (format: "avif" | "webp" | "jpg") =>
+    image?.asset
+      ? urlFor(image).width(1920).height(1000).fit("crop").format(format as ImageFormat).url()
+      : undefined;
+
   return (
     <section
       className="parallax-bg relative h-[55vh] min-h-[400px] overflow-hidden bg-emerald-deep bg-cover bg-center bg-fixed"
       style={
         {
-          "--parallax-avif": `url(/img/${image}-1920.avif)`,
-          "--parallax-webp": `url(/img/${image}-1920.webp)`,
-          "--parallax-jpg": `url(/img/${image}-1920.jpg)`,
+          "--parallax-avif": crop("avif") ? `url(${crop("avif")})` : undefined,
+          "--parallax-webp": crop("webp") ? `url(${crop("webp")})` : undefined,
+          "--parallax-jpg": crop("jpg") ? `url(${crop("jpg")})` : undefined,
         } as CSSProperties
       }
     >

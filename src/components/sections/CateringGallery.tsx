@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 import { cx } from "@/lib/cx";
 import type { GalleryTile } from "@/data/catering";
+import type { SanityImageRef, SitePhotoPool } from "@/sanity/types";
 
 /**
  * Catering gallery — desktop: one dominant portrait photo (col 1, full grid
@@ -22,27 +23,37 @@ import type { GalleryTile } from "@/data/catering";
  */
 const AREA_NAMES = ["dominant", "t1", "t2", "t3", "t4", "t5", "t6"];
 
-export function CateringGallery({ tiles }: { tiles: GalleryTile[] }) {
+export function CateringGallery({
+  tiles,
+  photoPool,
+}: {
+  tiles: GalleryTile[];
+  photoPool: SitePhotoPool;
+}) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [lightboxTile, setLightboxTile] = useState<GalleryTile | null>(null);
 
   return (
     <>
       {isDesktop ? (
-        <DesktopGrid tiles={tiles} onExpand={setLightboxTile} />
+        <DesktopGrid tiles={tiles} photoPool={photoPool} onExpand={setLightboxTile} />
       ) : (
-        <MobileCollage tiles={tiles} />
+        <MobileCollage tiles={tiles} photoPool={photoPool} />
       )}
-      {lightboxTile && <Lightbox tile={lightboxTile} onClose={() => setLightboxTile(null)} />}
+      {lightboxTile && (
+        <Lightbox tile={lightboxTile} photoPool={photoPool} onClose={() => setLightboxTile(null)} />
+      )}
     </>
   );
 }
 
 function DesktopGrid({
   tiles,
+  photoPool,
   onExpand,
 }: {
   tiles: GalleryTile[];
+  photoPool: SitePhotoPool;
   onExpand: (tile: GalleryTile) => void;
 }) {
   return (
@@ -70,6 +81,7 @@ function DesktopGrid({
             {tile.type === "image" ? (
               <PhotoTile
                 tile={tile}
+                image={photoPool[tile.image]?.image}
                 onExpand={tile.expandable ? () => onExpand(tile) : undefined}
               />
             ) : (
@@ -82,19 +94,26 @@ function DesktopGrid({
   );
 }
 
-function PhotoTile({ tile, onExpand }: { tile: GalleryTile; onExpand?: () => void }) {
+function PhotoTile({
+  tile,
+  image,
+  onExpand,
+}: {
+  tile: GalleryTile;
+  image: SanityImageRef | undefined;
+  onExpand?: () => void;
+}) {
   return (
     <div className="group relative h-full w-full overflow-hidden rounded-card shadow-card transition-shadow duration-[var(--dur)] ease-[var(--ease-soft)] hover:shadow-lift">
-      <Picture
-        name={tile.image}
-        alt={tile.alt}
-        widths={[480, 828, 1200]}
-        sizes="(min-width: 1024px) 480px, 100vw"
-        width={1200}
-        height={1500}
-        className="absolute inset-0"
-        imgClassName="h-full w-full object-cover transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.04]"
-      />
+      {image?.asset && (
+        <SanityPicture
+          image={image}
+          alt={tile.alt}
+          sizes="(min-width: 1024px) 480px, 100vw"
+          className="absolute inset-0"
+          imgClassName="h-full w-full object-cover transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.04]"
+        />
+      )}
       {onExpand && <ExpandButton heading={tile.heading} onClick={onExpand} />}
     </div>
   );
@@ -130,7 +149,7 @@ const COLLAGE_BLOCKS: Array<{
   { large: "walima", small1: "breads", small2: "daawat", largeSide: "right" },
 ];
 
-function MobileCollage({ tiles }: { tiles: GalleryTile[] }) {
+function MobileCollage({ tiles, photoPool }: { tiles: GalleryTile[]; photoPool: SitePhotoPool }) {
   const byId = new Map(tiles.map((t) => [t.id, t]));
 
   return (
@@ -142,7 +161,13 @@ function MobileCollage({ tiles }: { tiles: GalleryTile[] }) {
         if (!large || !small1 || !small2) return null;
         return (
           <Reveal key={block.large} delay={i * 80}>
-            <CollageBlock large={large} small1={small1} small2={small2} largeSide={block.largeSide} />
+            <CollageBlock
+              large={large}
+              small1={small1}
+              small2={small2}
+              largeSide={block.largeSide}
+              photoPool={photoPool}
+            />
           </Reveal>
         );
       })}
@@ -155,35 +180,48 @@ function CollageBlock({
   small1,
   small2,
   largeSide,
+  photoPool,
 }: {
   large: GalleryTile;
   small1: GalleryTile;
   small2: GalleryTile;
   largeSide: "left" | "right";
+  photoPool: SitePhotoPool;
 }) {
   return (
     <div className="grid aspect-[4/3] grid-cols-2 grid-rows-2 gap-s2">
-      {largeSide === "left" && <CollageImage tile={large} className="row-span-2" />}
-      <CollageImage tile={small1} />
-      <CollageImage tile={small2} />
-      {largeSide === "right" && <CollageImage tile={large} className="row-span-2" />}
+      {largeSide === "left" && (
+        <CollageImage tile={large} image={photoPool[large.image]?.image} className="row-span-2" />
+      )}
+      <CollageImage tile={small1} image={photoPool[small1.image]?.image} />
+      <CollageImage tile={small2} image={photoPool[small2.image]?.image} />
+      {largeSide === "right" && (
+        <CollageImage tile={large} image={photoPool[large.image]?.image} className="row-span-2" />
+      )}
     </div>
   );
 }
 
-function CollageImage({ tile, className }: { tile: GalleryTile; className?: string }) {
+function CollageImage({
+  tile,
+  image,
+  className,
+}: {
+  tile: GalleryTile;
+  image: SanityImageRef | undefined;
+  className?: string;
+}) {
   return (
     <div className={cx("relative overflow-hidden", className)}>
-      <Picture
-        name={tile.image}
-        alt={tile.alt}
-        widths={[480, 828]}
-        sizes="50vw"
-        width={1200}
-        height={800}
-        className="absolute inset-0"
-        imgClassName="h-full w-full object-cover"
-      />
+      {image?.asset && (
+        <SanityPicture
+          image={image}
+          alt={tile.alt}
+          sizes="50vw"
+          className="absolute inset-0"
+          imgClassName="h-full w-full object-cover"
+        />
+      )}
     </div>
   );
 }
@@ -213,7 +251,16 @@ function ExpandButton({ heading, onClick }: { heading: string; onClick: () => vo
   );
 }
 
-function Lightbox({ tile, onClose }: { tile: GalleryTile; onClose: () => void }) {
+function Lightbox({
+  tile,
+  photoPool,
+  onClose,
+}: {
+  tile: GalleryTile;
+  photoPool: SitePhotoPool;
+  onClose: () => void;
+}) {
+  const image = photoPool[tile.image]?.image;
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -271,28 +318,20 @@ function Lightbox({ tile, onClose }: { tile: GalleryTile; onClose: () => void })
         onClick={(e) => e.stopPropagation()}
         className="relative inline-block overflow-hidden rounded-card shadow-lift"
       >
-        {/* The two expandable source photos (food-karahi.jpg, catering.jpg)
-            are both native 6192x4128 (3:2 landscape) — width=1200/height=800
-            here matches that real ratio. The rest of the codebase's
-            Picture calls for these names pass width=1200/height=1500 (4:5)
-            instead, but that mismatch is harmless there: every other usage
-            crops into a fixed-height object-cover frame, so the declared
-            aspect ratio never actually governs the rendered box. Here it
-            does — object-contain with auto sizing lets the real ratio
-            through, so a wrong hint visibly under-sizes the image (the img,
-            not the wrapper, carries the max-width/max-height + auto sizing,
-            since a wrapper-driven `w-full` fights an inline <picture>'s
-            shrink-to-fit sizing and can under-size the image too). */}
-        <Picture
-          name={tile.image}
-          alt={tile.alt}
-          widths={[480, 828, 1200, 1600]}
-          sizes="92vw"
-          width={1200}
-          height={800}
-          className="block"
-          imgClassName="block max-h-[85vh] max-w-[92vw] h-auto w-auto object-contain"
-        />
+        {/* fill={false} renders next/image in intrinsic mode, using the
+            Sanity asset's own metadata dimensions — object-contain with
+            auto sizing lets the real ratio through, unlike every other
+            usage of this tile's photo which crops into a fixed-height
+            object-cover frame. */}
+        {image?.asset && (
+          <SanityPicture
+            image={image}
+            alt={tile.alt}
+            sizes="92vw"
+            fill={false}
+            className="block max-h-[85vh] max-w-[92vw] h-auto w-auto object-contain"
+          />
+        )}
       </div>
     </div>
   );

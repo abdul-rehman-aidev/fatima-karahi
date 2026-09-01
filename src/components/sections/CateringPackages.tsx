@@ -3,7 +3,7 @@ import { Divider } from "@/components/ds/Divider";
 import { Eyebrow } from "@/components/ds/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { cx } from "@/lib/cx";
-import type { CateringPackage } from "@/data/catering";
+import type { CateringPackage } from "@/sanity/types";
 import { site } from "@/data/site";
 
 /**
@@ -69,7 +69,7 @@ export function CateringPackages({ packages }: { packages: CateringPackage[] }) 
             row the way a bare 5-up grid would. */}
         <div className="grid grid-cols-1 gap-s6 sm:grid-cols-2 lg:grid-cols-3">
           {packages.map((pkg, i) => (
-            <Reveal key={pkg.id} delay={i * 60}>
+            <Reveal key={pkg._key} delay={i * 60}>
               <PackageCard pkg={pkg} tier={i} />
             </Reveal>
           ))}
@@ -108,7 +108,7 @@ function PackageCard({ pkg, tier }: { pkg: CateringPackage; tier: number }) {
       <Divider tone="line" width={56} className="my-s5" />
 
       <ul className="m-0 flex-1 list-none space-y-[10px] p-0">
-        {pkg.items.map((item) => (
+        {(pkg.items ?? []).map((item) => (
           <li key={item} className="flex items-start gap-[8px] font-body text-[0.9rem] leading-[1.4] text-stone">
             <CheckIcon />
             <span>{item}</span>

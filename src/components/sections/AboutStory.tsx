@@ -1,8 +1,9 @@
 import { Button } from "@/components/ds/Button";
 import { Divider } from "@/components/ds/Divider";
 import { Eyebrow } from "@/components/ds/Eyebrow";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
+import type { SitePhotoPool } from "@/sanity/types";
 
 /**
  * About page story block — eyebrow + heading + 5 short paragraphs (client-
@@ -17,7 +18,10 @@ import { Reveal } from "@/components/motion/Reveal";
  * circle and its overlap offset proportional so neither can exceed the
  * section's own padding at any width.
  */
-export function AboutStory() {
+export function AboutStory({ photoPool }: { photoPool: SitePhotoPool }) {
+  const bbq = photoPool["food-bbq"]?.image;
+  const karahi = photoPool["food-karahi"]?.image;
+
   return (
     <section className="bg-ivory py-section text-ink">
       <div className="mx-auto grid max-w-content items-center gap-s8 px-[clamp(20px,5vw,56px)] lg:grid-cols-[1.1fr_0.9fr]">
@@ -72,28 +76,26 @@ export function AboutStory() {
 
         <Reveal delay={100} className="relative mx-auto w-[min(300px,72vw)] sm:w-[min(380px,42vw)]">
           <div className="relative aspect-square overflow-hidden rounded-full border-[6px] border-cream shadow-lift">
-            <Picture
-              name="food-bbq"
-              alt="Charcoal-grilled BBQ skewers plated for service"
-              widths={[480, 828, 1200]}
-              sizes="(min-width: 640px) 380px, 72vw"
-              width={1200}
-              height={1200}
-              className="absolute inset-0"
-              imgClassName="h-full w-full object-cover"
-            />
+            {bbq?.asset && (
+              <SanityPicture
+                image={bbq}
+                alt="Charcoal-grilled BBQ skewers plated for service"
+                sizes="(min-width: 640px) 380px, 72vw"
+                className="absolute inset-0"
+                imgClassName="h-full w-full object-cover"
+              />
+            )}
           </div>
           <div className="absolute bottom-[-5%] right-[-5%] aspect-square w-[38%] min-w-[90px] overflow-hidden rounded-card border-[3px] border-ivory shadow-lift">
-            <Picture
-              name="food-karahi"
-              alt="Chicken karahi finishing in a cast-iron pan over open heat"
-              widths={[480, 828]}
-              sizes="140px"
-              width={1200}
-              height={1500}
-              className="absolute inset-0"
-              imgClassName="h-full w-full object-cover"
-            />
+            {karahi?.asset && (
+              <SanityPicture
+                image={karahi}
+                alt="Chicken karahi finishing in a cast-iron pan over open heat"
+                sizes="140px"
+                className="absolute inset-0"
+                imgClassName="h-full w-full object-cover"
+              />
+            )}
           </div>
         </Reveal>
       </div>

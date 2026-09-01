@@ -1,7 +1,8 @@
 import { Divider } from "@/components/ds/Divider";
 import { Eyebrow } from "@/components/ds/Eyebrow";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { Reveal } from "@/components/motion/Reveal";
+import type { SanityImageRef } from "@/sanity/types";
 
 /**
  * Founder bio + personal vision statement — the About page's closing note.
@@ -23,22 +24,21 @@ const VISION_POINTS = [
   "Our goal is to proudly represent Pakistani cuisine and hospitality and to become one of Canada's leading destinations for authentic Pakistani food.",
 ];
 
-export function FounderSection() {
+export function FounderSection({ image }: { image: SanityImageRef | undefined }) {
   return (
     <section className="bg-ivory py-section text-ink">
       <div className="mx-auto grid max-w-content items-start gap-s8 px-[clamp(20px,5vw,56px)] lg:grid-cols-[0.8fr_1.2fr]">
         <Reveal className="mx-auto w-[min(300px,72vw)] text-center sm:w-[min(300px,42vw)] lg:sticky lg:top-[132px] lg:w-full lg:max-w-[300px] lg:text-left">
           <div className="relative mx-auto aspect-square w-[min(300px,72vw)] overflow-hidden rounded-full border-[6px] border-cream shadow-lift sm:w-[min(300px,42vw)] lg:mx-0 lg:w-full">
-            <Picture
-              name="founder"
-              alt="Hamza Butt, founder of Fatima Karahi"
-              widths={[300, 480, 828]}
-              sizes="(min-width: 1024px) 300px, (min-width: 640px) 42vw, 72vw"
-              width={1024}
-              height={1024}
-              className="absolute inset-0"
-              imgClassName="h-full w-full object-cover"
-            />
+            {image?.asset && (
+              <SanityPicture
+                image={image}
+                alt="Hamza Butt, founder of Fatima Karahi"
+                sizes="(min-width: 1024px) 300px, (min-width: 640px) 42vw, 72vw"
+                className="absolute inset-0"
+                imgClassName="h-full w-full object-cover"
+              />
+            )}
           </div>
           <h3 className="m-0 mt-s5 font-display text-[1.6rem] leading-[1.1] text-ink">Hamza Butt</h3>
           <p className="mt-[6px] font-body text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-gold-deep">

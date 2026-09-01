@@ -9,7 +9,8 @@ import { CateringSpotlight } from "@/components/sections/CateringSpotlight";
 import { TrustBand } from "@/components/sections/TrustBand";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { sanityFetch } from "@/sanity/live";
-import { MENU_QUERY } from "@/sanity/queries";
+import { CATERING_PACKAGES_QUERY, MENU_QUERY, SITE_PHOTOS_QUERY } from "@/sanity/queries";
+import { buildSitePhotoPool } from "@/sanity/types";
 
 export const metadata: Metadata = {
   // SEO audit High #7 — the previous default title (from layout.tsx's
@@ -26,24 +27,30 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { data } = await sanityFetch({ query: MENU_QUERY });
+  const [{ data }, { data: sitePhotosData }, { data: packagesData }] = await Promise.all([
+    sanityFetch({ query: MENU_QUERY }),
+    sanityFetch({ query: SITE_PHOTOS_QUERY }),
+    sanityFetch({ query: CATERING_PACKAGES_QUERY }),
+  ]);
   const mustTryDishes = pickMustTryDishes(data?.categories ?? []);
+  const photoPool = buildSitePhotoPool(sitePhotosData?.photos);
+  const cateringPackages = packagesData?.packages ?? [];
 
   return (
     <>
-      <HomeHero />
+      <HomeHero photoPool={photoPool} />
       <SpecialsCarousel dishes={mustTryDishes} />
       <ParallaxStatement
-        image="parallax"
+        image={photoPool["parallax"]?.image}
         heading="We cater the way we’d host family."
         supportingLine="Setup, service, and the last plate cleared: all handled."
         ctaLabel="Explore catering"
         ctaHref="/catering"
       />
-      <AboutTeaser />
-      <StoryBand />
-      <CateringSpotlight />
-      <TrustBand />
+      <AboutTeaser image={photoPool["hero-carousel-4"]?.image} />
+      <StoryBand image={photoPool["food-spread"]?.image} />
+      <CateringSpotlight photoPool={photoPool} packages={cateringPackages} />
+      <TrustBand backgroundImage={photoPool["hero-carousel-1"]?.image} />
       <FAQSection variant="light" />
     </>
   );

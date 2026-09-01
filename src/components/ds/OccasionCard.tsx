@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Picture } from "@/components/media/Picture";
+import { SanityPicture } from "@/components/media/SanityPicture";
 import { cx } from "@/lib/cx";
+import type { SanityImageRef } from "@/sanity/types";
 
 /**
  * OccasionCard — editorial occasion vignette for catering, never a
@@ -19,7 +20,7 @@ export function OccasionCard({
   name: string;
   urdu?: string;
   from?: string;
-  image: string;
+  image: SanityImageRef | undefined;
   alt: string;
   height?: "md" | "lg";
   className?: string;
@@ -33,16 +34,15 @@ export function OccasionCard({
         className,
       )}
     >
-      <Picture
-        name={image}
-        alt={alt}
-        widths={[480, 828, 1200]}
-        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-        width={1200}
-        height={1500}
-        className="absolute inset-0"
-        imgClassName="h-full w-full object-cover transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.04]"
-      />
+      {image?.asset && (
+        <SanityPicture
+          image={image}
+          alt={alt}
+          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+          className="absolute inset-0"
+          imgClassName="h-full w-full object-cover transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.04]"
+        />
+      )}
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--emerald-deep)_5%,transparent)_0%,color-mix(in_srgb,var(--emerald-deep)_82%,transparent)_100%)]"

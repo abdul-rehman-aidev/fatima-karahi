@@ -5,6 +5,7 @@ import { OccasionCard } from "@/components/ds/OccasionCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { cx } from "@/lib/cx";
 import type { Occasion } from "@/data/catering";
+import type { SitePhotoPool } from "@/sanity/types";
 
 /**
  * Catering page's "Occasions" showcase — a snap-scroll rail at every
@@ -16,7 +17,13 @@ import type { Occasion } from "@/data/catering";
  * layout on first paint (the bug that bit CateringGallery's desktop/mobile
  * split under static export).
  */
-export function OccasionsCarousel({ occasions }: { occasions: Occasion[] }) {
+export function OccasionsCarousel({
+  occasions,
+  photoPool,
+}: {
+  occasions: Occasion[];
+  photoPool: SitePhotoPool;
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -74,7 +81,13 @@ export function OccasionsCarousel({ occasions }: { occasions: Occasion[] }) {
               aria-label={`${i + 1} of ${occasions.length}`}
               className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[calc((100%-2*var(--s-4))/3)]"
             >
-              <OccasionCard name={o.name} urdu={o.urdu} image={o.image} alt={o.name} height="lg" />
+              <OccasionCard
+                name={o.name}
+                urdu={o.urdu}
+                image={photoPool[o.image]?.image}
+                alt={o.name}
+                height="lg"
+              />
               <p className="mt-s3 max-w-[38ch] text-[0.9rem] leading-[1.6] text-sage">{o.line}</p>
             </div>
           ))}

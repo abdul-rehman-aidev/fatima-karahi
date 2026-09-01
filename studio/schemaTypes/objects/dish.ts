@@ -63,17 +63,53 @@ export const dish = defineType({
       type: 'boolean',
       initialValue: false,
     }),
+    defineField({
+      name: 'image',
+      title: 'Photo',
+      description:
+        'Used as the card photo when this dish is featured on the homepage. Falls back to the menu category\'s section photo if left empty.',
+      type: 'image',
+      options: {hotspot: true},
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured on homepage',
+      description:
+        'Shows this dish in the "Must Try" carousel on the homepage. Requires a flat price — dishes priced by tiers can\'t be featured.',
+      type: 'boolean',
+      initialValue: false,
+      validation: (rule) =>
+        rule.custom((featured, context) => {
+          const parent = context.parent as {priceTiers?: unknown[]} | undefined
+          const hasTiers = Array.isArray(parent?.priceTiers) && parent.priceTiers.length > 0
+          if (featured && hasTiers) return "Featured dishes need a flat price — this dish uses price tiers"
+          return true
+        }),
+    }),
+    defineField({
+      name: 'featuredOrder',
+      title: 'Featured order',
+      description: 'Position in the homepage carousel (lower numbers first). Only used when "Featured on homepage" is on.',
+      type: 'number',
+      hidden: ({parent}) => !parent?.featured,
+      validation: (rule) => rule.integer().positive(),
+    }),
   ],
   preview: {
-    select: {name: 'name', price: 'price', tiers: 'priceTiers'},
-    prepare: ({name, price, tiers}) => ({
+    select: {name: 'name', price: 'price', tiers: 'priceTiers', featured: 'featured', media: 'image'},
+    prepare: ({name, price, tiers, featured, media}) => ({
       title: name,
-      subtitle:
+      subtitle: [
         typeof price === 'number'
           ? `$${price.toFixed(2)}`
           : Array.isArray(tiers) && tiers.length
             ? `${tiers.length} price tier${tiers.length > 1 ? 's' : ''}`
             : 'No price set',
+        featured ? 'Featured' : undefined,
+      ]
+        .filter(Boolean)
+        .join(' · '),
+      media,
     }),
   },
 })
