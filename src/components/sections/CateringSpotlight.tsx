@@ -21,8 +21,10 @@ export function CateringSpotlight({
   // Occasions no longer carry their own placeholder pricing — the real
   // number comes from the cheapest catering package, regardless of the
   // display order editors set in Studio.
-  const startingPrice =
-    packages.length > 0 ? Math.min(...packages.map((p) => p.pricePerPerson)) : undefined;
+  const prices = packages
+    .map((p) => p.pricePerPerson)
+    .filter((price): price is number => price !== null);
+  const startingPrice = prices.length > 0 ? Math.min(...prices) : undefined;
 
   return (
     <section className="bg-ivory py-section text-ink">

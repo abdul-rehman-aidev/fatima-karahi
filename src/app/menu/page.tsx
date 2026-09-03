@@ -88,7 +88,9 @@ export default async function MenuPage() {
         </div>
       </section>
 
-      <MenuCategoryNav cats={menu.map((c) => ({ id: c.categoryId, label: c.label }))} />
+      <MenuCategoryNav
+        cats={menu.flatMap((c) => (c.categoryId && c.label ? [{ id: c.categoryId, label: c.label }] : []))}
+      />
 
       {/* Editorial lists — ivory conversion zone */}
       <div className="bg-ivory pb-section pt-[clamp(2rem,4vw,3rem)] text-ink">

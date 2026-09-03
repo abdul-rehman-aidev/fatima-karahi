@@ -28,8 +28,11 @@ type SitePhotosArray = Extract<SitePhotosData, { photos: unknown }>["photos"];
 
 export type SitePhoto = NonNullable<SitePhotosArray>[number];
 
+/** A pool entry's image, normalized to `undefined` (never `null`) so it lines up with SanityImageRef. */
+type PoolPhoto = Omit<SitePhoto, "image"> & { image: NonNullable<SitePhoto["image"]> | undefined };
+
 /** Keyed lookup for the shared "Site Photos" pool, e.g. pool["hero-carousel-1"]. */
-export type SitePhotoPool = Record<string, SitePhoto | undefined>;
+export type SitePhotoPool = Record<string, PoolPhoto | undefined>;
 
 /**
  * A missing or duplicate key degrades gracefully (dropped / last-wins) rather
@@ -39,7 +42,7 @@ export type SitePhotoPool = Record<string, SitePhoto | undefined>;
 export function buildSitePhotoPool(photos: SitePhoto[] | null | undefined): SitePhotoPool {
   const pool: SitePhotoPool = {};
   for (const photo of photos ?? []) {
-    if (photo.key) pool[photo.key] = photo;
+    if (photo.key) pool[photo.key] = { ...photo, image: photo.image ?? undefined };
   }
   return pool;
 }

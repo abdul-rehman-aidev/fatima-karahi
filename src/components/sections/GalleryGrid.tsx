@@ -21,14 +21,14 @@ import type { GalleryPhotoTile, GalleryQuoteTile, GalleryRole, GalleryTile } fro
  */
 const BATCH_SIZE = 9;
 
-const roleSpan: Record<GalleryRole, string> = {
+const roleSpan: Record<NonNullable<GalleryRole>, string> = {
   feature: "col-span-2 row-span-2 sm:col-span-2 sm:row-span-2 lg:col-span-3 lg:row-span-2",
   wide: "col-span-2 row-span-1 sm:col-span-4 sm:row-span-1 lg:col-span-3 lg:row-span-1",
   tall: "col-span-1 row-span-2 sm:col-span-2 sm:row-span-2 lg:col-span-2 lg:row-span-2",
   normal: "col-span-1 row-span-1 sm:col-span-2 sm:row-span-1 lg:col-span-2 lg:row-span-1",
 };
 
-const roleSizes: Record<GalleryRole, string> = {
+const roleSizes: Record<NonNullable<GalleryRole>, string> = {
   feature: "(min-width: 640px) 50vw, 100vw",
   wide: "(min-width: 1024px) 50vw, 100vw",
   tall: "(min-width: 1024px) 33vw, 50vw",
@@ -68,15 +68,18 @@ export function GalleryGrid({ tiles }: { tiles: GalleryTile[] }) {
 }
 
 function PhotoTile({ tile }: { tile: GalleryPhotoTile }) {
+  const role = tile.role ?? "normal";
   return (
-    <div className={cx("group relative overflow-hidden rounded-card shadow-card", roleSpan[tile.role])}>
-      <SanityPicture
-        image={tile.image}
-        alt={tile.image.alt}
-        sizes={roleSizes[tile.role]}
-        className="absolute inset-0"
-        imgClassName="motion-safe:transition-transform motion-safe:duration-[var(--dur-slow)] motion-safe:ease-[var(--ease-soft)] motion-safe:group-hover:scale-[1.045]"
-      />
+    <div className={cx("group relative overflow-hidden rounded-card shadow-card", roleSpan[role])}>
+      {tile.image?.asset && (
+        <SanityPicture
+          image={tile.image}
+          alt={tile.image.alt ?? ""}
+          sizes={roleSizes[role]}
+          className="absolute inset-0"
+          imgClassName="motion-safe:transition-transform motion-safe:duration-[var(--dur-slow)] motion-safe:ease-[var(--ease-soft)] motion-safe:group-hover:scale-[1.045]"
+        />
+      )}
     </div>
   );
 }
@@ -86,7 +89,7 @@ function QuoteTile({ tile }: { tile: GalleryQuoteTile }) {
     <div
       className={cx(
         "flex flex-col items-center justify-center gap-s4 rounded-card border border-[color-mix(in_srgb,var(--gold)_30%,transparent)] bg-[color-mix(in_srgb,var(--ivory)_6%,transparent)] px-s5 py-s6 text-center",
-        roleSpan[tile.role],
+        roleSpan[tile.role ?? "normal"],
       )}
     >
       <Divider width={64} className="opacity-80" />

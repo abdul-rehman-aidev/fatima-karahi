@@ -19,7 +19,7 @@ export function MenuSection({ category }: { category: MenuCategory }) {
 
   return (
     <section
-      id={category.categoryId}
+      id={category.categoryId ?? undefined}
       aria-labelledby={`${category.categoryId}-h`}
       className="scroll-mt-[132px] pt-[clamp(2.5rem,5vw,4rem)]"
     >
