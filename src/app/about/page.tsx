@@ -25,9 +25,9 @@ export default async function AboutPage() {
     <>
       <AboutHero photoPool={photoPool} />
       <AboutStory photoPool={photoPool} />
-      <AboutVideoBanner image={photoPool["food-karahi"]?.image} />
+      <AboutVideoBanner image={photoPool["food-karahi"]?.image ?? undefined} />
       <AboutTestimonials />
-      <FounderSection image={photoPool["founder"]?.image} />
+      <FounderSection image={photoPool["founder"]?.image ?? undefined} />
       <TeamSection />
       <BreadcrumbJsonLd name="About" path="/about/" />
     </>
