@@ -136,7 +136,7 @@ function SpecialCard({ dish, index, total }: { dish: MustTryDish; index: number;
         {dish.image && (
           <SanityPicture
             image={dish.image}
-            alt={dish.name}
+            alt={dish.name ?? ""}
             sizes="(min-width: 1024px) 267px, (min-width: 640px) 46vw, 82vw"
             className="absolute inset-0"
             imgClassName="transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.05]"

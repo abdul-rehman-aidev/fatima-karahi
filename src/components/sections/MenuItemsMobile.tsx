@@ -65,7 +65,7 @@ function DishPrice({ dish }: { dish: Dish }) {
         {dish.priceTiers.map((tier) => (
           <div key={tier._key} className="whitespace-nowrap">
             <span className="mr-[4px] font-body text-[0.7rem] font-normal text-stone">{tier.label}</span>
-            {formatPrice(tier.price)}
+            {formatPrice(tier.price ?? 0)}
           </div>
         ))}
       </div>

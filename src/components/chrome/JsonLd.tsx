@@ -121,8 +121,8 @@ export function MenuJsonLd({ menu }: { menu: MenuCategory[] }) {
         offers: d.priceTiers
           ? {
               "@type": "AggregateOffer",
-              lowPrice: Math.min(...d.priceTiers.map((t) => t.price)),
-              highPrice: Math.max(...d.priceTiers.map((t) => t.price)),
+              lowPrice: Math.min(...d.priceTiers.map((t) => t.price ?? 0)),
+              highPrice: Math.max(...d.priceTiers.map((t) => t.price ?? 0)),
               offerCount: d.priceTiers.length,
               priceCurrency: "CAD",
             }
