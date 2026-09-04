@@ -63,7 +63,7 @@ export const site = {
     ],
   },
 
-  email: "hello@fatimakarahi.ca", // TODO(client)
+  email: "Fatimarestaurantedmonton@gmail.com",
 
   // Real social profiles, confirmed by the client Aug 30, 2026 — both the
   // on-page footer link and the JSON-LD `sameAs` array read these same
