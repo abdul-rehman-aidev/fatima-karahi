@@ -15,8 +15,8 @@ export const site = {
   description:
     "Fatima Karahi is a halal Pakistani restaurant in Edmonton: slow-cooked karahi, charcoal BBQ, and biryani. Family-owned, catering daawats across the city.",
 
-  // TODO(client): production domain (used for canonical URLs, OG, sitemap, JSON-LD)
-  url: "https://fatimakarahi.ca",
+  // Production domain (used for canonical URLs, OG, sitemap, JSON-LD)
+  url: "https://fatimakarahiyeg.com",
 
   // Real ordering-platform URL (Loop POS). Every "Order online" button
   // across the site reads this one value via hasOrderUrl()/orderUrl — set
