@@ -13,18 +13,14 @@ const KIND_LABEL: Record<FormKind, string> = {
   query: "General query",
 };
 
-// TODO(client): once a domain is verified in Resend (resend.com/domains),
-// point this at that domain, e.g. "Fatima Karahi <forms@fatimakarahi.ca>".
-// Until then, Resend's shared onboarding@resend.dev sender can only deliver
-// to the address on the Resend account itself — not to `site.email` — so
-// submissions will 403 in production until this is set.
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Fatima Karahi <onboarding@resend.dev>";
+// fatimakarahiyeg.com is verified in Resend (resend.com/domains) — override
+// with RESEND_FROM_EMAIL only if that ever changes. Sending from an
+// unverified address (e.g. Resend's onboarding@resend.dev sandbox) 403s.
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Fatima Karahi <forms@fatimakarahiyeg.com>";
 
-// Same sandbox restriction applies to the recipient: while FROM_EMAIL is
-// still the resend.dev default, Resend only delivers to the email on the
-// Resend account itself. Set RESEND_TO_EMAIL to that address to test the
-// integration end-to-end before a domain is verified; remove it afterwards
-// so submissions go to `site.email` again.
+// Testing-only override — see .env.local.example. Not needed now that
+// FROM_EMAIL is on a verified domain: Resend can deliver to any recipient
+// in that case, so this defaults straight to `site.email`.
 const TO_EMAIL = process.env.RESEND_TO_EMAIL || site.email;
 
 function escapeHtml(value: string): string {
