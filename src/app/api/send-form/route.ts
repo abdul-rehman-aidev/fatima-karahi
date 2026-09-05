@@ -20,6 +20,13 @@ const KIND_LABEL: Record<FormKind, string> = {
 // submissions will 403 in production until this is set.
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Fatima Karahi <onboarding@resend.dev>";
 
+// Same sandbox restriction applies to the recipient: while FROM_EMAIL is
+// still the resend.dev default, Resend only delivers to the email on the
+// Resend account itself. Set RESEND_TO_EMAIL to that address to test the
+// integration end-to-end before a domain is verified; remove it afterwards
+// so submissions go to `site.email` again.
+const TO_EMAIL = process.env.RESEND_TO_EMAIL || site.email;
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -71,7 +78,7 @@ export async function POST(req: Request) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.warn(
-      `[send-form] RESEND_API_KEY is not set — simulating a successful "${kind}" submission instead of emailing ${site.email}.`,
+      `[send-form] RESEND_API_KEY is not set — simulating a successful "${kind}" submission instead of emailing ${TO_EMAIL}.`,
     );
     return NextResponse.json({ ok: true, simulated: true });
   }
@@ -90,7 +97,7 @@ export async function POST(req: Request) {
   const { error } = await resend.emails.send(
     {
       from: FROM_EMAIL,
-      to: [site.email],
+      to: [TO_EMAIL],
       subject: `${label} — fatimakarahi.ca`,
       html: `<table>${rows}</table>`,
     },
@@ -98,7 +105,7 @@ export async function POST(req: Request) {
   );
 
   if (error) {
-    console.error(`[send-form] Resend error sending "${kind}":`, error.message);
+    console.error(`[send-form] Resend error sending "${kind}" (${error.name}):`, error.message);
     return NextResponse.json({ ok: false, error: "Failed to send." }, { status: 502 });
   }
 
