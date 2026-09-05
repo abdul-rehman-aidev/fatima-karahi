@@ -1,15 +1,12 @@
 /**
- * Static-export-safe form submission.
+ * Form submission — posts to the site's own `/api/send-form` route, which
+ * emails the payload via Resend (see that route for the Resend integration).
  *
- * TODO(client): set NEXT_PUBLIC_FORM_ENDPOINT (e.g. a Formspree form URL,
- * a Resend-backed serverless function, etc.). Pointing at a real endpoint is
- * this one line of configuration — the payload is plain JSON.
- *
- * Until it's set, submissions are simulated locally (with a console warning)
- * so the full success flow is testable.
+ * `NEXT_PUBLIC_FORM_ENDPOINT` can override this with an external endpoint
+ * (e.g. a Formspree URL) instead, if that's ever preferred.
  */
 
-export const FORM_ENDPOINT: string = process.env.NEXT_PUBLIC_FORM_ENDPOINT ?? "";
+export const FORM_ENDPOINT: string = process.env.NEXT_PUBLIC_FORM_ENDPOINT || "/api/send-form/";
 
 export type FormKind = "catering-quote" | "contact" | "query";
 
@@ -19,22 +16,20 @@ export async function submitForm(
   kind: FormKind,
   data: Record<string, string>,
 ): Promise<FormResult> {
-  if (!FORM_ENDPOINT) {
-    console.warn(
-      `[fatima-karahi] NEXT_PUBLIC_FORM_ENDPOINT is not set — simulating a successful "${kind}" submission. Wire a real endpoint before launch.`,
-    );
-    await new Promise((r) => setTimeout(r, 650));
-    return { ok: true, simulated: true };
-  }
+  // Distinguishes this attempt for Resend's idempotency check, so a dropped
+  // response that's silently retried doesn't double-send the same email.
+  const submissionId = crypto.randomUUID();
 
   const res = await fetch(FORM_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ kind, ...data }),
+    body: JSON.stringify({ kind, submissionId, ...data }),
   });
 
   if (!res.ok) {
     throw new Error(`Form endpoint responded ${res.status}`);
   }
-  return { ok: true, simulated: false };
+
+  const body = (await res.json()) as { ok: true; simulated?: boolean };
+  return { ok: true, simulated: Boolean(body.simulated) };
 }
