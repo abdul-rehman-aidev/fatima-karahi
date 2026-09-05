@@ -76,11 +76,11 @@ measurement methodology.
   the photo grid. No rebuild needed — changes go live immediately.
 - **Form endpoint** — set `RESEND_API_KEY` in `.env.local` or your host's
   environment variables to start actually emailing form submissions (to
-  `site.email`) instead of simulating them. Once a sending domain is verified
-  in Resend, also set `RESEND_FROM_EMAIL` (see `.env.local.example`) — until
-  then, sends fall back to Resend's shared sandbox address, which can only
-  deliver to the Resend account's own email. To point forms at a different
-  backend entirely (e.g. Formspree) instead, set `NEXT_PUBLIC_FORM_ENDPOINT`.
+  `site.email`) instead of simulating them. Sends `from` `forms@fatimakarahiyeg.com`,
+  verified in Resend (resend.com/domains) — `RESEND_FROM_EMAIL` overrides that
+  if it ever changes (see `.env.local.example`). To point forms at a
+  different backend entirely (e.g. Formspree) instead, set
+  `NEXT_PUBLIC_FORM_ENDPOINT`.
 
 ## Deploying
 
