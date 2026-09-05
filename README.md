@@ -1,6 +1,6 @@
 # Fatima Karahi — website
 
-Next.js 15 (App Router, fully static export) + Tailwind CSS v4. Five pages: Home ·
+Next.js 15 (App Router, server-rendered) + Tailwind CSS v4. Five pages: Home ·
 Menu · Catering · Contact · Order. Built from the `design/` Claude Design system
 one level up — every token, colour, type value and component spec there is the
 source of truth; nothing here invents a value that isn't in that system.
@@ -12,8 +12,9 @@ The client-facing build directive explicitly overrode that to **Next.js +
 Tailwind**, so that's what's built here — see "JS budget" below for the one
 honest trade-off that decision carries.
 
-- **Next.js 15, App Router, `output: "export"`** — fully static HTML/CSS/JS,
-  no server required. TypeScript throughout.
+- **Next.js 15, App Router, server-rendered** (not `output: "export"`) — so
+  Sanity's Live Content API, Draft Mode, Visual Editing, and the `/api/send-form`
+  route can work. TypeScript throughout.
 - **Tailwind v4** — the entire palette, spacing, radii, shadows and type scale
   are mapped in `src/app/globals.css` under `@theme inline` from the design
   tokens. Tailwind's own default colour palette is disabled (`--color-*:
@@ -27,10 +28,10 @@ honest trade-off that decision carries.
   Sanity's image CDN for on-the-fly resizing and format negotiation. Only
   brand/UI assets (logo, halal badge icon, favicon) stay as static files in
   `public/`.
-- **Forms** are static-export-safe: `src/lib/forms.ts` posts JSON to
-  `NEXT_PUBLIC_FORM_ENDPOINT`. Until that's set, submissions simulate success
-  locally (with a console warning) so the full success/error UI is testable
-  end-to-end without a backend.
+- **Forms**: `src/lib/forms.ts` posts JSON to `/api/send-form`, which emails
+  the submission via Resend. Without a `RESEND_API_KEY`, submissions simulate
+  success locally (with a console warning) so the full success/error UI is
+  testable end-to-end without a backend.
 
 ## Running it
 
@@ -73,9 +74,13 @@ measurement methodology.
   `npm run dev` there): the "Site Photos" singleton for hero/about/catering
   marketing photos, "Menu" for per-category section photos, and "Gallery" for
   the photo grid. No rebuild needed — changes go live immediately.
-- **Form endpoint** — set `NEXT_PUBLIC_FORM_ENDPOINT` (e.g. a Formspree form
-  URL) in `.env.local` or your host's environment variables. That's the whole
-  integration; `src/lib/forms.ts` needs no other change.
+- **Form endpoint** — set `RESEND_API_KEY` in `.env.local` or your host's
+  environment variables to start actually emailing form submissions (to
+  `site.email`) instead of simulating them. Once a sending domain is verified
+  in Resend, also set `RESEND_FROM_EMAIL` (see `.env.local.example`) — until
+  then, sends fall back to Resend's shared sandbox address, which can only
+  deliver to the Resend account's own email. To point forms at a different
+  backend entirely (e.g. Formspree) instead, set `NEXT_PUBLIC_FORM_ENDPOINT`.
 
 ## Deploying
 
