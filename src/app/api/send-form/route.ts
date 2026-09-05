@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     {
       from: FROM_EMAIL,
       to: [TO_EMAIL],
-      subject: `${label} — fatimakarahi.ca`,
+      subject: `${label} — fatimakarahiyeg.com`,
       html: `<table>${rows}</table>`,
     },
     idempotencyKey ? { idempotencyKey } : undefined,
